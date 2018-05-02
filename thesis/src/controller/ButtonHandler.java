@@ -23,6 +23,7 @@ public class ButtonHandler implements ActionListener{
 		TargetSelection.getInstance().reset.addActionListener(this);
 		TargetSelection.getInstance().submit.addActionListener(this);
 		SegmentationPanel.getInstance().segment.addActionListener(this);
+		System.out.println("hhhhh");
 	}
 
 	@Override
