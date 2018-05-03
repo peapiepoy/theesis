@@ -130,6 +130,7 @@ public class Entry {
 	}
 	
 	public void toArray() {
+		System.out.println("to array()...");
 		int iw = img.getWidth();
 		int ih = img.getHeight();
 		this.pixelmap = new int[ih][iw];
@@ -143,19 +144,50 @@ public class Entry {
 			e.printStackTrace();
 		}
 		
-
-		for (int i = 0; i < ih; i++) {
-			for (int j = 0; j < iw; j++) {
-				
+		int i, j=0;
+		for (i = 0; i < ih; i++) {
+			for (j = 0; j < iw; j++) {
 				this.pixelmap[i][j] = pixels[i * iw + j];
-				if(i>(iw-6) && j<5) {
-					int r = 0xff & pixelmap[i][j] >> 16;
-					System.out.print(r+" ");
-				}
 			}
-			if(i>(iw-6))
-				System.out.println();
 		}
+		System.out.println("pixelmapsize:"+i+"x"+j);
+	}
+	
+	public BufferedImage grayScalePixelMap() {
+		int iw = img.getWidth();
+		int ih = img.getHeight();
+		int minR, minG, minB, maxR, maxG, maxB;
+		
+		minR = 255;
+		minG = 255;
+		minB = 255;
+		maxR = 0;
+		maxG = 0;
+		maxB = 0;
+		grayscaled = new BufferedImage(iw, ih, BufferedImage.TYPE_BYTE_GRAY);
+		int pixel, a, r, g, b, ave;
+		
+		for(int j=0; j<ih;j++){
+			for(int i=0;i<iw;i++){
+				pixel = this.pixelmap[j][i];
+				a = 0xff & pixel >> 24;
+				r = 0xff & pixel >> 16; // Obtain the red Component
+				g = 0xff & pixel >> 8; // Obtain the green Component
+				b = 0xff & pixel; // Obtain the blue Component
+				ave = (r+g+b)/3;
+				maxR = maxR>r? maxR: r;
+				maxG = maxG>g? maxG: g;
+				maxB = maxB>b? maxB: b;
+				
+				minR = minR<r? minR: r;
+				minG = minG>g? minG: g;
+				minB = minB>b? minB: b;
+				
+				int pix = (a<<24) | (ave<<16) | (ave<<8) | ave;
+				this.grayscaled.setRGB(i,j,pix);
+			}
+		}
+		return grayscaled;
 	}
 	
 	public static Entry getInstance() {

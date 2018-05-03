@@ -23,14 +23,13 @@ public class ButtonHandler implements ActionListener{
 		TargetSelection.getInstance().reset.addActionListener(this);
 		TargetSelection.getInstance().submit.addActionListener(this);
 		SegmentationPanel.getInstance().segment.addActionListener(this);
-		System.out.println("hhahaha");
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == FirstPagePanel.getInstance().uploadB) {
 			JFileChooser jfc = new JFileChooser();
-			jfc.setCurrentDirectory(new File(System.getProperty("user.home")+"/Pictures/Inpainting/"));
+			jfc.setCurrentDirectory(new File(System.getProperty("user.home")+"/git/theesis/thesis/images"));
 			FileNameExtensionFilter filter = new FileNameExtensionFilter("*.Images", "jpg","png");
 			jfc.addChoosableFileFilter(filter);
 			jfc. setAcceptAllFileFilterUsed(false);

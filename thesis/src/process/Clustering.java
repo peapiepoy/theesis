@@ -22,7 +22,7 @@ public class Clustering {
 			      BufferedImage.TYPE_BYTE_GRAY);
 		
 		grayscaled = Entry.getInstance().grayScaling();
-		partialContrastStretching();
+		//partialContrastStretching();
 	}
 	
 	public void setImage(BufferedImage displayImage) {
@@ -33,8 +33,6 @@ public class Clustering {
 		int pixelSize = img.getColorModel().getPixelSize();
 		double mp = Math.pow(2, pixelSize) - 1;
 		pcs = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
-		max = Entry.getInstance().grayMax;
-		min = Entry.getInstance().grayMin;
 		int range = max - min;
 		System.out.println("range: "+range+"   max: "+max+"   min:"+min+"   mp: "+mp);
 		
@@ -67,28 +65,35 @@ public class Clustering {
 		System.out.println("maxTH: "+maxTH+"  minTH: "+minTH);
 		
 		
-		for(int y=0; y< grayscaled.getHeight(); y++) {
-			for(int x = 0; x< grayscaled.getWidth(); x++) {
-				int rgb = grayscaled.getRGB(x,y);
+		for(int y=0; y< img.getHeight(); y++) {
+			for(int x = 0; x< img.getWidth(); x++) {
+				int rgb = img.getRGB(x,y);
 				int a = (rgb>>24)&0xff;
-//				int r = (rgb>>16)&0xff;
-//				int g = (rgb>>8)&0xff;
-//				int b = rgb&0xff;
+				int r = (rgb>>16)&0xff;
+				int g = (rgb>>8)&0xff;
+				int b = rgb&0xff;
 //				
 //				//int pixel = (fmax - fmin) * (maxTH - minTH) * ((r+g+b)-(minTH * 3)) + fmin;
-//				int pixel1 = ( (fmax-fmin)/ (maxTH - minTH) );
-//				int pixelr = pixel1 * (r-fmin);
-//				int pixelg = pixel1 * (g-fmin);
-//				int pixelb = pixel1 * (b-fmin);
+			
+				//int pixel;
+				int upperGap = 250-maxTH;
+				fmin = upperGap + minTH;
+				int pixel1 = ( (fmax-fmin)/ (maxTH - minTH) );
+				int pixelr = pixel1 * (r-minTH);
+				int pixelg = pixel1 * (g-minTH);
+				int pixelb = pixel1 * (b-minTH);
 				
 				
 //				
 				
 				
-				int pixel = ((fmax - fmin) * (maxTH - minTH) * (rgb&0xff - fmin)) + fmin;
+				//int pixel = ((fmax - fmin) * (maxTH - minTH) * (rgb&0xff - fmin)) + fmin;
 //				pixel = pixel>255?255:pixel;
 //				pixel = pixel < 0? 0: pixel;
-				int pixelVal = (a<<24) | (pixel<<16) | (pixel <<8) | pixel;
+				
+				
+				
+				int pixelVal = (a<<24) | (pixelr<<16) | (pixelg <<8) | pixelb;
 				pcs.setRGB(x,y,pixelVal);
 //				if(x<5&&y<5)
 //					System.out.print("  "+pixel+"|"+(pixel<<16+","+pixel<<8);
@@ -102,7 +107,7 @@ public class Clustering {
 		
 	
 	public BufferedImage getSegmentedImage() {
-		return pcs;
+		return grayscaled;
 	}
 
 }
