@@ -15,7 +15,7 @@ public class SplitAndMerge {
 		grayscaled = new BufferedImage(width, height, 
 			      BufferedImage.TYPE_BYTE_GRAY);
 		
-		grayscaled = Entry.getInstance().grayScalePixelMap();
+		grayscaled = Entry.getInstance().grayscaling();
 	}
 	
 	public void setImage(BufferedImage displayImage) {

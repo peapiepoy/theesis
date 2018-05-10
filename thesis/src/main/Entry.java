@@ -78,65 +78,28 @@ public class Entry {
 		}
 		this.targetRegion = new Polygon(x, y, x.length);
 	}
-	
-	public BufferedImage grayScaling(){
-		int w = img.getWidth();
-		int h = img.getHeight();
+	public TargetAreaSelection getTargetAreaSelection() {
+		return targetArea;
+	}
+	/*
+	 * creates representation of the image to a 2d array
+	 * and sidelining setting the max and min pixel :)
+	 */
+	public void toArray() {
+		int iw = img.getWidth();
+		int ih = img.getHeight();
+		int pixel, a, r, g, b, ave;
 		int minR, minG, minB, maxR, maxG, maxB;
+		int []pixels = new int[iw * ih];
+		PixelGrabber pg = new PixelGrabber(img, 0, 0, iw, ih, pixels, 0, iw);
 		
+		this.pixelmap = new int[ih][iw];
 		minR = 255;
 		minG = 255;
 		minB = 255;
 		maxR = 0;
 		maxG = 0;
 		maxB = 0;
-		grayscaled = new BufferedImage(w, h, BufferedImage.TYPE_BYTE_GRAY);
-		System.out.println("grayscaling...");
-		int pixel, r,g, b, a;
-		
-		for(int y=0;y<h;y++){
-			for(int x=0;x<w;x++){
-				pixel = this.img.getRGB(x, y);
-//				pixelMap[x][y] = rgb;
-//				pixel = this.pixelmap[x][y];
-				r = 0xff & pixel >> 16; // Obtain the red Component
-				g = 0xff & pixel >> 8; // Obtain the green Component
-				b = 0xff & pixel; // Obtain the blue Component
-				
-				a = 0xff & pixel >> 24;
-//				int r = (rgb>>16)&0xff;
-//				int g = (rgb>>8)&0xff;
-//				int b = rgb&0xff;
-				int ave = (r+b+g) / 3;
-				maxR = maxR>r? maxR: r;
-				maxG = maxG>g? maxG: g;
-				maxB = maxB>b? maxB: b;
-				
-				minR = minR<r? minR: r;
-				minG = minG>g? minG: g;
-				minB = minB>b? minB: b;
-				
-				int pix = (a<<24) | (ave<<16) | (ave<<8) | ave;
-				this.grayscaled.setRGB(x,y,pix);
-			}
-		}
-		this.minTH = (minR + minG + minB) / 3;
-		this.maxTH = (maxR + maxG + maxB) / 3;
-		return grayscaled;
-	}
-	
-	public TargetAreaSelection getTargetAreaSelection() {
-		return targetArea;
-	}
-	
-	public void toArray() {
-		System.out.println("to array()...");
-		int iw = img.getWidth();
-		int ih = img.getHeight();
-		this.pixelmap = new int[ih][iw];
-		
-		int []pixels = new int[iw * ih];
-		PixelGrabber pg = new PixelGrabber(img, 0, 0, iw, ih, pixels, 0, iw);
 		try {
 			pg.grabPixels();
 		} catch (InterruptedException e) {
@@ -148,24 +111,31 @@ public class Entry {
 		for (i = 0; i < ih; i++) {
 			for (j = 0; j < iw; j++) {
 				this.pixelmap[i][j] = pixels[i * iw + j];
+				pixel = pixelmap[i][j];
+				a = 0xff & pixel >> 24;
+				r = 0xff & pixel >> 16; // Obtain the red Component
+				g = 0xff & pixel >> 8; // Obtain the green Component
+				b = 0xff & pixel; // Obtain the blue Component
+				
+				maxR = maxR>r? maxR: r;
+				maxG = maxG>g? maxG: g;
+				maxB = maxB>b? maxB: b;
+				
+				minR = minR<r? minR: r;
+				minG = minG>g? minG: g;
+				minB = minB>b? minB: b;
 			}
 		}
-		System.out.println("pixelmapsize:"+i+"x"+j);
+		this.minTH = (minR + minG + minB) / 3;
+		this.maxTH = (maxR + maxG + maxB) / 3;
 	}
 	
-	public BufferedImage grayScalePixelMap() {
+	public BufferedImage grayscaling() {
 		int iw = img.getWidth();
 		int ih = img.getHeight();
-		int minR, minG, minB, maxR, maxG, maxB;
-		
-		minR = 255;
-		minG = 255;
-		minB = 255;
-		maxR = 0;
-		maxG = 0;
-		maxB = 0;
-		grayscaled = new BufferedImage(iw, ih, BufferedImage.TYPE_BYTE_GRAY);
 		int pixel, a, r, g, b, ave;
+		grayscaled = new BufferedImage(iw, ih, BufferedImage.TYPE_BYTE_GRAY);
+		
 		
 		for(int j=0; j<ih;j++){
 			for(int i=0;i<iw;i++){
@@ -174,14 +144,8 @@ public class Entry {
 				r = 0xff & pixel >> 16; // Obtain the red Component
 				g = 0xff & pixel >> 8; // Obtain the green Component
 				b = 0xff & pixel; // Obtain the blue Component
-				ave = (r+g+b)/3;
-				maxR = maxR>r? maxR: r;
-				maxG = maxG>g? maxG: g;
-				maxB = maxB>b? maxB: b;
 				
-				minR = minR<r? minR: r;
-				minG = minG>g? minG: g;
-				minB = minB>b? minB: b;
+				ave = (r+g+b)/3;
 				
 				int pix = (a<<24) | (ave<<16) | (ave<<8) | ave;
 				this.grayscaled.setRGB(i,j,pix);

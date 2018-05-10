@@ -21,7 +21,7 @@ public class Clustering {
 		grayscaled = new BufferedImage(width, height, 
 			      BufferedImage.TYPE_BYTE_GRAY);
 		
-		grayscaled = Entry.getInstance().grayScaling();
+		grayscaled = Entry.getInstance().grayscaling();
 		//partialContrastStretching();
 	}
 	

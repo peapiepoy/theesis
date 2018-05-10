@@ -30,7 +30,7 @@ public class Main extends JFrame {
 		ts = TargetSelection.getInstance();
 		sp = SegmentationPanel.getInstance();
 		
-		entry = new Entry();
+		this.entry = new Entry();
 		bh = ButtonHandler.getInstance();
 		
 		frameSetup();
