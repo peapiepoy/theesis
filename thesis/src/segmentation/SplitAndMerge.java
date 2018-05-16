@@ -1,4 +1,4 @@
-package process;
+package segmentation;
 
 import java.awt.image.BufferedImage;
 

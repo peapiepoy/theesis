@@ -14,6 +14,7 @@ public class SegmentationPanel extends JPanel{
 	public JButton segment;
 	private BufferedImage img;
 	public SegmentationDisplay clustering, regionGrowing, spam; 
+	public boolean segmenting = false;
 	
 	public SegmentationPanel() {
 		setLayout(null);

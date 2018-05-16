@@ -1,19 +1,19 @@
-package process;
+package segmentation;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
+import algorithms.clustering.SubtractiveClustering;
 
 import main.Entry;
 
 public class Clustering {
 	private int width, height;
-	private int max, min;
 	private int pcsMatrix[][];
 	BufferedImage img = null;
 	BufferedImage pcsImg = null;
 	BufferedImage segmentedImage = null;
 	BufferedImage grayscaled = null;
+	public SubtractiveClustering subtractiveClustering;
+	public final int kCluster = 3;
 	
 	public Clustering(BufferedImage img) {
 		this.img = img;
@@ -22,6 +22,8 @@ public class Clustering {
 																//		grayscaled = new BufferedImage(width, height, 
 																//			      BufferedImage.TYPE_BYTE_GRAY);
 		pcsImg = partialContrastStretching();
+		subtractiveClustering = new SubtractiveClustering(pcsMatrix, kCluster);
+		
 	}
 	
 	public void setImage(BufferedImage displayImage) {
@@ -31,7 +33,7 @@ public class Clustering {
 	
 	public BufferedImage partialContrastStretching() {
 		pcsImg =  new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		pcsMatrix = new int[width][height];
+		pcsMatrix = new int[height][width];
 		int [][]pixelmap = Entry.getInstance().pixelmap;
 		int maxTH = Entry.getInstance().maxTH;
 		int minTH = Entry.getInstance().minTH;
@@ -68,10 +70,7 @@ public class Clustering {
 		
 		return pcsImg;
 	}
-		
-	public void subtractiveClusteringAlgorithm() {
-		
-	}
+	
 	
 	public BufferedImage getSegmentedImage() {
 		return pcsImg;

@@ -12,11 +12,11 @@ import java.util.Vector;
 import javax.imageio.ImageIO;
 
 import inpainting_utils.TargetAreaSelection;
+import segmentation.Clustering;
+import segmentation.SplitAndMerge;
 import view.TargetSelection;
 import view.SegmentationPanel;
 import controller.MouseHandler;
-import process.Clustering;
-import process.SplitAndMerge;
 
 public class Entry {
 	private static Entry instance;
@@ -28,7 +28,7 @@ public class Entry {
 	public int maxTH, minTH;
 	// segmentation Split and Merge
 	private SplitAndMerge spam;
-	private Clustering clustering;
+	public Clustering clustering;
 	// segmentation RegionGrowing
 	
 	Entry(){
@@ -39,6 +39,8 @@ public class Entry {
 		this.clustering = new Clustering(img);
 		
 		SegmentationPanel.getInstance().spam.setDisplayImg(this.spam.getSegmentedImage());
+		
+		SegmentationPanel.getInstance().clustering.segmenting = true;
 		SegmentationPanel.getInstance().clustering.setDisplayImg(this.clustering.getSegmentedImage());
 		
 		System.out.println("Entry.segmentationProcess() ends");

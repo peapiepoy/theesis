@@ -1,17 +1,24 @@
 package inpainting_utils;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
+
+import main.Entry;
+
 
 public class SegmentationDisplay extends JPanel{
 	private BufferedImage displayImg = null;
 	private int x, y;
 	private String label;
 	private final String one = "SPAM", two = "KMeans", three = "Region Growing";
+	public boolean segmenting = false;
 	
 	public SegmentationDisplay(int x, int y, String label){
 		this.x = x;
@@ -53,6 +60,19 @@ public class SegmentationDisplay extends JPanel{
 		setBounds(x, 50, 300, 580);
 	}
 	public void paint(Graphics g) {
+		
+		if(label.equals(two) && segmenting) { // if kmeans X SCA
+			System.out.println("\nyoooooooowssss");
+			int kCluster = Entry.getInstance().clustering.kCluster;
+			ArrayList<Point> centroids = Entry.getInstance().clustering.subtractiveClustering.clusterCenter;
+				for(int z = 0; z < kCluster; z++) {
+					g.setColor(Color.red);
+					g.drawRect((int)centroids.get(z).getX() - 9, (int)centroids.get(z).getY() - 9, 18, 18);
+					g.drawRect((int)centroids.get(z).getX() - 8, (int)centroids.get(z).getY() - 8, 16, 16);
+					g.drawRect((int)centroids.get(z).getX() - 7, (int)centroids.get(z).getY() - 7, 14, 14);
+				}
+		}
+
 		g.drawImage(displayImg, 0, 0, this);
 	}
 }

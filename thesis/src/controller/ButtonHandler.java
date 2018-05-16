@@ -67,6 +67,7 @@ public class ButtonHandler implements ActionListener{
 		}
 		else if(e.getSource() == SegmentationPanel.getInstance().segment) {
 			System.out.println("segmentation....");
+			SegmentationPanel.getInstance().segmenting = true;
 			Entry.getInstance().segmentationProcess();
 		}
 	}
