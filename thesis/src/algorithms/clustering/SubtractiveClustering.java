@@ -20,6 +20,7 @@ public class SubtractiveClustering {
 	public SubtractiveClustering(int [][]pixelmap, int kCluster) {
 		pixelmap = new int[pixelmap.length][pixelmap[0].length];
 		this.pixelmap = pixelmap;
+		pcsToString();
 		potentialMap = new double[pixelmap.length][pixelmap[0].length];
 		this.kCluster = kCluster;
 		clusterCenter = new ArrayList<>();
@@ -34,9 +35,9 @@ public class SubtractiveClustering {
 		System.out.println("sca processing...");
 		calculatePotential();	// initial pixel potentials
 		clusterCenter.add(maxPotentialPoint());
+		potentialToString();
 		
-		
-		for(int index=0; index < kCluster; index++) {
+		for(int index=1; index < kCluster; index++) {
 			 // if potential ni (candidate) centercluster is > accept_ratio
 				// add to the cluster center arraylist
 				// update potentials
@@ -50,7 +51,7 @@ public class SubtractiveClustering {
 		
 	}
 
-	// calculates the potential for every pixel of the image (pcs processed)
+	// calculates the potential for every pixel of the (pcs processed) image
 	public void calculatePotential() {
 		double potential = 0.0;
 		
@@ -62,21 +63,24 @@ public class SubtractiveClustering {
 				int gn = (rgbn>>8)&0xff;
 				int bn = rgbn&0xff;
 				
-					for(int xi = 0; xi< pixelmap.length; xi++) {
-						for(int yi=0; yi < pixelmap[0].length; yi++) {
+					double diff = 0;
+					for(int xi = 0; xi < xn; xi++) {
+						for(int yi=0; yi < yn; yi++) {
 							
 							int rgbi = pixelmap[xi][yi];
 							int ri = (rgbi>>16)&0xff;
 							int gi = (rgbi>>8)&0xff;
 							int bi = rgbi&0xff;
 							
-							potential = Math.exp(-ALPHA * ( Math.pow(rn-ri , 2) + 
-															Math.pow(gn-gi , 2) + 
-															Math.pow(bn-bi , 2) ) ) / (Math.pow(RA,2));
-							
-							potentialMap[x][y] = potential;
+							diff += Math.pow(rn-ri , 2) + 
+									Math.pow(gn-gi , 2) + 
+									Math.pow(bn-bi , 2) ;
 						}
 					}
+					
+				potential = Math.exp( (-ALPHA * diff ) / (Math.pow(RA,2)) );
+				
+				potentialMap[xn][yn] = potential;
 			}
 		}
 		System.out.println();
@@ -93,20 +97,20 @@ public class SubtractiveClustering {
 		gC = (pixelC>>8)&0xff;
 		bC = pixelC&0xff;
 		
-		for(int x = 0; x< pixelmap.length; x++) {
-			for(int y=0; y < pixelmap[0].length; y++) {
-				int rgb = pixelmap[x][y];
+		for(int xn = 0; xn < pixelmap.length; xn++) {
+			for(int yn=0; yn < pixelmap[0].length; yn++) {
+				int rgb = pixelmap[xn][yn];
 				int r = (rgb>>16)&0xff;
 				int g = (rgb>>8)&0xff;
 				int b = rgb&0xff;
 				
-				newPotential = potentialMap[x][y] - ( potentialC * Math.exp( -ALPHA * ( Math.pow(r-rC , 2) + 
+				newPotential = potentialMap[xn][yn] - ( potentialC * Math.exp( -ALPHA * ( Math.pow(r-rC , 2) + 
 																						Math.pow(g-gC , 2) + 
 																						Math.pow(b-bC , 2) ) ) /
 																						Math.pow(RB,2)
 													);
 				
-				potentialMap[x][y] = newPotential;
+				potentialMap[xn][yn] = newPotential;
 			}
 		}
 		
@@ -133,6 +137,16 @@ public class SubtractiveClustering {
 			for(int y=40; y < 50; y++) {
 				System.out.printf("%.0f",potentialMap[x][y]);
 				System.out.print(" ");
+			}
+			System.out.println();
+		}
+	}
+	
+	public void pcsToString() {
+		for(int x = 40; x< 50; x++) {
+			for(int y=40; y < 50; y++) {
+//				System.out.printf("%.0f",potentialMap[x][y]);
+				System.out.print(" "+pixelmap[x][y]);
 			}
 			System.out.println();
 		}
