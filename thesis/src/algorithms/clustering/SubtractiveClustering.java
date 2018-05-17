@@ -44,6 +44,7 @@ public class SubtractiveClustering {
 			System.out.println(index+" cluster centroid... ");
 			updatePotential(clusterCenter.get(index));
 			clusterCenter.add(maxPotentialPoint());
+			potentialToString();
 		}
 		
 		
@@ -52,31 +53,30 @@ public class SubtractiveClustering {
 	// calculates the potential for every pixel of the image (pcs processed)
 	public void calculatePotential() {
 		double potential = 0.0;
-		for(int x1 = 0; x1< pixelmap.length; x1++) {
-			System.out.print(".");
-			for(int y1=0; y1 < pixelmap[0].length; y1++) {
+		
+		for(int xn = 0; xn< pixelmap.length; xn++) {
+			for(int yn=0; yn < pixelmap[0].length; yn++) {
 				
-				int rgb1 = pixelmap[x1][y1];
-//				int a1 = (rgb1>>24)&0xff;
-				int r1 = (rgb1>>16)&0xff;
-				int g1 = (rgb1>>8)&0xff;
-				int b1 = rgb1&0xff;
+				int rgbn = pixelmap[xn][yn];
+				int rn = (rgbn>>16)&0xff;
+				int gn = (rgbn>>8)&0xff;
+				int bn = rgbn&0xff;
 				
-				for(int x = 0; x< pixelmap.length; x++) {
-					for(int y=0; y < pixelmap[0].length; y++) {
-						int rgb = pixelmap[x][y];
-//						int a = (rgb>>24)&0xff;
-						int r = (rgb>>16)&0xff;
-						int g = (rgb>>8)&0xff;
-						int b = rgb&0xff;
-						
-						potential = Math.exp(-ALPHA * ( Math.pow(r1-r , 2) + 
-														Math.pow(g1-g , 2) + 
-														Math.pow(b1-b , 2) ) ) / (Math.pow(RA,2));
-						
-						potentialMap[x][y] = potential;
+					for(int xi = 0; xi< pixelmap.length; xi++) {
+						for(int yi=0; yi < pixelmap[0].length; yi++) {
+							
+							int rgbi = pixelmap[xi][yi];
+							int ri = (rgbi>>16)&0xff;
+							int gi = (rgbi>>8)&0xff;
+							int bi = rgbi&0xff;
+							
+							potential = Math.exp(-ALPHA * ( Math.pow(rn-ri , 2) + 
+															Math.pow(gn-gi , 2) + 
+															Math.pow(bn-bi , 2) ) ) / (Math.pow(RA,2));
+							
+							potentialMap[x][y] = potential;
+						}
 					}
-				}
 			}
 		}
 		System.out.println();
@@ -100,7 +100,7 @@ public class SubtractiveClustering {
 				int g = (rgb>>8)&0xff;
 				int b = rgb&0xff;
 				
-				newPotential = potentialMap[x][y] * ( potentialC * Math.exp( -ALPHA * ( Math.pow(r-rC , 2) + 
+				newPotential = potentialMap[x][y] - ( potentialC * Math.exp( -ALPHA * ( Math.pow(r-rC , 2) + 
 																						Math.pow(g-gC , 2) + 
 																						Math.pow(b-bC , 2) ) ) /
 																						Math.pow(RB,2)
@@ -124,12 +124,22 @@ public class SubtractiveClustering {
 				}
 			}
 		}
-		System.out.println("maxpotential: "+maxPotential);
+		System.out.println("maxpotential: "+maxPotential+ " maxpoint:"+maxPoint.getX()+","+maxPoint.getY());
 		return maxPoint;
 	}
 	
-	
+	public void potentialToString() {
+		for(int x = 40; x< 50; x++) {
+			for(int y=40; y < 50; y++) {
+				System.out.printf("%.0f",potentialMap[x][y]);
+				System.out.print(" ");
+			}
+			System.out.println();
+		}
+	}
 }
+
+
 
 
 class Cell{

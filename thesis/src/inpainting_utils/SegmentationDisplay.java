@@ -66,6 +66,7 @@ public class SegmentationDisplay extends JPanel{
 			int kCluster = Entry.getInstance().clustering.kCluster;
 			ArrayList<Point> centroids = Entry.getInstance().clustering.subtractiveClustering.clusterCenter;
 				for(int z = 0; z < kCluster; z++) {
+					System.out.println(centroids.get(z).getX()+","+centroids.get(z).getY());
 					g.setColor(Color.red);
 					g.drawRect((int)centroids.get(z).getX() - 9, (int)centroids.get(z).getY() - 9, 18, 18);
 					g.drawRect((int)centroids.get(z).getX() - 8, (int)centroids.get(z).getY() - 8, 16, 16);
