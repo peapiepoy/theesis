@@ -2,7 +2,11 @@ package algorithms.clustering;
 
 
 import java.awt.Point;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
+
 
 public class SubtractiveClustering {
 	private int[][] pixelmap;
@@ -16,15 +20,26 @@ public class SubtractiveClustering {
 	
 	public ArrayList<Point> clusterCenter;
 	private int kCluster;
+	private String output = "";
 	
 	public SubtractiveClustering(int [][]pixelmap, int kCluster) {
-		pixelmap = new int[pixelmap.length][pixelmap[0].length];
+		this.pixelmap = new int[pixelmap.length][pixelmap[0].length];
 		this.pixelmap = pixelmap;
-		pcsToString();
 		potentialMap = new double[pixelmap.length][pixelmap[0].length];
 		this.kCluster = kCluster;
 		clusterCenter = new ArrayList<>();
 		process();
+		
+		try {
+			PrintStream out = new PrintStream(new FileOutputStream(
+			          "OutFile.txt"));
+			out.print(output);
+			out.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	private void process() {
@@ -43,7 +58,7 @@ public class SubtractiveClustering {
 				// update potentials
 			// else if 
 			System.out.println(index+" cluster centroid... ");
-			updatePotential(clusterCenter.get(index));
+			updatePotential(clusterCenter.get(index-1));
 			clusterCenter.add(maxPotentialPoint());
 			potentialToString();
 		}
@@ -133,22 +148,14 @@ public class SubtractiveClustering {
 	}
 	
 	public void potentialToString() {
-		for(int x = 40; x< 50; x++) {
-			for(int y=40; y < 50; y++) {
-				System.out.printf("%.0f",potentialMap[x][y]);
-				System.out.print(" ");
-			}
-			System.out.println();
-		}
-	}
-	
-	public void pcsToString() {
-		for(int x = 40; x< 50; x++) {
-			for(int y=40; y < 50; y++) {
+		output+= "\n\n\tPIXEL POTENTIAL\n";
+		for(int x = 0; x< pixelmap.length; x++) {
+			for(int y=0; y < pixelmap[0].length; y++) {
+				output+= " "+ (int) potentialMap[x][y];
 //				System.out.printf("%.0f",potentialMap[x][y]);
-				System.out.print(" "+pixelmap[x][y]);
+//				System.out.print(" ");
 			}
-			System.out.println();
+			output += "\n";
 		}
 	}
 }

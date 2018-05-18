@@ -32,6 +32,7 @@ public class SegmentationDisplay extends JPanel{
 		this.displayImg = scaleImage(displayImg, 300, 660);
 		
 	}
+	
 	public static BufferedImage scaleImage(BufferedImage image,
 	        int newWidth, int newHeight) {
 	        // Make sure the aspect ratio is maintained, so the image is not distorted

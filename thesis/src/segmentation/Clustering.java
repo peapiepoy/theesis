@@ -4,10 +4,12 @@ import java.awt.image.BufferedImage;
 import algorithms.clustering.SubtractiveClustering;
 
 import main.Entry;
+import view.SegmentationPanel;
+
 
 public class Clustering {
 	private int width, height;
-	private int pcsMatrix[][];
+	public int pcsMatrix[][];
 	BufferedImage img = null;
 	BufferedImage pcsImg = null;
 	BufferedImage segmentedImage = null;
@@ -22,8 +24,25 @@ public class Clustering {
 																//		grayscaled = new BufferedImage(width, height, 
 																//			      BufferedImage.TYPE_BYTE_GRAY);
 		pcsImg = partialContrastStretching();
+		pcsMatrixToString();
 		subtractiveClustering = new SubtractiveClustering(pcsMatrix, kCluster);
-		
+//		SegmentationPanel.getInstance().segmenting = true;
+//		SegmentationPanel.getInstance().clustering.repaint(); 
+	}
+	
+	public void pcsMatrixToString() {
+		System.out.println("\t\tPCS Matrix from CLustering.java");
+		for(int b=40; b<60; b++) {
+			for (int n=40; n<60; n++) {
+				int rgb = pcsMatrix[b][n];
+				int r = (rgb>>16)&0xff;
+				int g = (rgb>>8)&0xff;
+				int z = rgb&0xff;
+				
+				System.out.print(" "+ r+","+g+","+z);
+			}
+			System.out.println();
+		}
 	}
 	
 	public void setImage(BufferedImage displayImage) {
@@ -64,7 +83,7 @@ public class Clustering {
 
 				int pixelVal = (a<<24) | (pixelr<<16) | (pixelg <<8) | pixelb;
 				pcsImg.setRGB(x,y,pixelVal);
-				pcsMatrix[y][x] = pixelVal; 
+				this.pcsMatrix[y][x] = pixelVal;  
 			}
 		}
 		
