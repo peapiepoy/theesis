@@ -19,15 +19,23 @@ public class SubtractiveClustering {
     public static double REJECT_RATIO = 0.16d;
 	
 	public ArrayList<Point> clusterCenter;
+	public ArrayList<Point> dataSet;
+	
 	private int kCluster;
 	private String output = "";
+	private int blockSize = 5;
+	public int row, col;
 	
 	public SubtractiveClustering(int [][]pixelmap, int kCluster) {
-		this.pixelmap = new int[pixelmap.length][pixelmap[0].length];
+		this.row = pixelmap.length;
+		this.col = pixelmap[0].length;
+		this.pixelmap = new int[row][col];
 		this.pixelmap = pixelmap;
 		potentialMap = new double[pixelmap.length][pixelmap[0].length];
 		this.kCluster = kCluster;
 		clusterCenter = new ArrayList<>();
+		dataSet = new ArrayList<>();
+		
 		process();
 		
 		try {
@@ -47,7 +55,6 @@ public class SubtractiveClustering {
 		// find max potential and set as the first center cluster
 		// update potential value of other remaining pixels based on the first cluster center
 		// repeat finding max
-		System.out.println("sca processing...");
 		calculatePotential();	// initial pixel potentials
 		clusterCenter.add(maxPotentialPoint());
 		potentialToString();
@@ -78,10 +85,17 @@ public class SubtractiveClustering {
 				int gn = (rgbn>>8)&0xff;
 				int bn = rgbn&0xff;
 				
+				dataSet.clear();
+				dataSet = getDataSet(xn, yn);
+				
 					double diff = 0;
-					for(int xi = 0; xi < xn; xi++) {
-						for(int yi=0; yi < yn; yi++) {
-							
+//					for(int xi = 0; xi < xn; xi++) {
+//						for(int yi=0; yi < yn; yi++) {
+					for(int q = 0; q < dataSet.size(); q++) {
+						int xi, yi;
+						xi = (int) dataSet.get(q).getX();
+						yi = (int) dataSet.get(q).getY();
+						
 							int rgbi = pixelmap[xi][yi];
 							int ri = (rgbi>>16)&0xff;
 							int gi = (rgbi>>8)&0xff;
@@ -90,11 +104,11 @@ public class SubtractiveClustering {
 							diff += Math.pow(rn-ri , 2) + 
 									Math.pow(gn-gi , 2) + 
 									Math.pow(bn-bi , 2) ;
-						}
+//						}
 					}
 					
 				potential = Math.exp( (-ALPHA * diff ) / (Math.pow(RA,2)) );
-				
+				                                                                                                                                               
 				potentialMap[xn][yn] = potential;
 			}
 		}
@@ -125,7 +139,7 @@ public class SubtractiveClustering {
 																						Math.pow(RB,2)
 													);
 				
-				potentialMap[xn][yn] = newPotential;
+				potentialMap[yn][xn] = newPotential;
 			}
 		}
 		
@@ -152,12 +166,30 @@ public class SubtractiveClustering {
 		for(int x = 0; x< pixelmap.length; x++) {
 			for(int y=0; y < pixelmap[0].length; y++) {
 				output+= " "+ (int) potentialMap[x][y];
-//				System.out.printf("%.0f",potentialMap[x][y]);
-//				System.out.print(" ");
 			}
 			output += "\n";
 		}
 	}
+	
+	public ArrayList<Point> getDataSet(int x, int y) {
+		ArrayList<Point> ds = new ArrayList<>();
+		
+		int gap, startX, startY, endX, endY;
+		gap = blockSize / 2;
+		startX = (x - gap) < 0? 0: x - gap;
+		startY = (y - gap) < 0? 0: y - gap;
+		endX = (x+gap)>col?col:(x+gap);
+		endY = (y+gap)>row?row:(y+gap);
+		
+		for(int q = startY; q < endY; q++) {
+			for( int w = startX; w < endX; w++) {
+				ds.add(new Point(w, q));
+			}
+		}
+		return ds;
+		
+	}
+	
 }
 
 

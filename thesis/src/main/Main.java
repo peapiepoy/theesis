@@ -36,8 +36,8 @@ public class Main extends JFrame {
 		frameSetup();
 		
 		cards.add(fpp, "first");
-		cards.add(ts, "second");
-		cards.add(sp, "third");
+		cards.add(sp, "second");
+		cards.add(ts, "third");
 		
 		add(cards);
 		setResizable(false);
@@ -50,7 +50,7 @@ public class Main extends JFrame {
 		
 		private void frameSetup() {
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setTitle("Thesis Attempt (:");
+			setTitle("Segmentation X Inpainting");
 			setSize(sizeX, sizeY);
 			setLocationRelativeTo(null);
 			setUndecorated(true);

@@ -4,17 +4,21 @@ import java.awt.image.BufferedImage;
 import algorithms.clustering.SubtractiveClustering;
 
 import main.Entry;
-import view.SegmentationPanel;
+import algorithms.clustering.KMeans;
 
 
 public class Clustering {
 	private int width, height;
 	public int pcsMatrix[][];
+	
 	BufferedImage img = null;
 	BufferedImage pcsImg = null;
 	BufferedImage segmentedImage = null;
 	BufferedImage grayscaled = null;
+	
 	public SubtractiveClustering subtractiveClustering;
+	public KMeans kmeans;
+	
 	public final int kCluster = 3;
 	
 	public Clustering(BufferedImage img) {
@@ -24,10 +28,11 @@ public class Clustering {
 																//		grayscaled = new BufferedImage(width, height, 
 																//			      BufferedImage.TYPE_BYTE_GRAY);
 		pcsImg = partialContrastStretching();
-		pcsMatrixToString();
-		subtractiveClustering = new SubtractiveClustering(pcsMatrix, kCluster);
-//		SegmentationPanel.getInstance().segmenting = true;
-//		SegmentationPanel.getInstance().clustering.repaint(); 
+//		pcsMatrixToString();
+//		subtractiveClustering = new SubtractiveClustering(pcsMatrix, kCluster);
+		kmeans = new KMeans(pcsMatrix, kCluster);
+		kmeans.process();
+		this.segmentedImage = kmeans.segmentedImage();
 	}
 	
 	public void pcsMatrixToString() {
@@ -92,7 +97,7 @@ public class Clustering {
 	
 	
 	public BufferedImage getSegmentedImage() {
-		return pcsImg;
+		return segmentedImage;
 	}
 
 }

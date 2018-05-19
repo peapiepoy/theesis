@@ -40,7 +40,7 @@ public class Entry {
 		
 		SegmentationPanel.getInstance().spam.setDisplayImg(this.spam.getSegmentedImage());
 		
-		//SegmentationPanel.getInstance().clustering.segmenting = true;
+		SegmentationPanel.getInstance().clustering.segmenting = true;
 		SegmentationPanel.getInstance().clustering.setDisplayImg(this.clustering.getSegmentedImage());
 		
 		System.out.println("Entry.segmentationProcess() ends");

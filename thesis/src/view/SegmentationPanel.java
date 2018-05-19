@@ -1,7 +1,5 @@
 package view;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JButton;
@@ -11,13 +9,19 @@ import inpainting_utils.SegmentationDisplay;
 
 public class SegmentationPanel extends JPanel{
 	public static SegmentationPanel instance;
-	public JButton segment;
+	public JButton segment, next;
 	private BufferedImage img;
 	public SegmentationDisplay clustering, regionGrowing, spam; 
 	public boolean segmenting = false;
 	
 	public SegmentationPanel() {
 		setLayout(null);
+		
+		next = new JButton("Next");
+		next.setBounds(400,650, 200,20);
+		add(next);
+		next.setEnabled(false);
+		next.setVisible(false);
 		
 		segment = new JButton("Segmentation Process");
 		segment.setBounds(400,650, 200,20);
@@ -29,6 +33,13 @@ public class SegmentationPanel extends JPanel{
 		add(spam);
 		add(clustering);
 		add(regionGrowing);
+	}
+	
+	public void flipButtons() {
+		this.next.setEnabled(true);
+		this.next.setVisible(true);
+		this.segment.setEnabled(false);
+		this.segment.setVisible(false);
 	}
 	
 	public void setImage() {

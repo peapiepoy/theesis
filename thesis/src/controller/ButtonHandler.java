@@ -23,6 +23,7 @@ public class ButtonHandler implements ActionListener{
 		TargetSelection.getInstance().reset.addActionListener(this);
 		TargetSelection.getInstance().submit.addActionListener(this);
 		SegmentationPanel.getInstance().segment.addActionListener(this);
+		SegmentationPanel.getInstance().next.addActionListener(this);
 	}
 
 	@Override
@@ -44,6 +45,9 @@ public class ButtonHandler implements ActionListener{
 			    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
 			}
 			Main.getInstance().nextCard();
+			
+			SegmentationPanel.getInstance().setImage();
+			SegmentationPanel.getInstance().displaySegmentationBoxes(); // displays image for segmentation
 		}
 		
 		/*
@@ -61,14 +65,17 @@ public class ButtonHandler implements ActionListener{
 		}
 		else if(e.getSource() == TargetSelection.getInstance().submit) {
 			Entry.getInstance().setPolygon(); //saves polygon in the Entry class
-			SegmentationPanel.getInstance().setImage();
-			SegmentationPanel.getInstance().displaySegmentationBoxes(); // displays image for segmentation
+//			SegmentationPanel.getInstance().setImage();
+//			SegmentationPanel.getInstance().displaySegmentationBoxes(); // displays image for segmentation
 			Main.getInstance().nextCard(); // next page
 		}
 		else if(e.getSource() == SegmentationPanel.getInstance().segment) {
-			System.out.println("segmentation....");
-			
 			Entry.getInstance().segmentationProcess();
+			SegmentationPanel.getInstance().flipButtons();
+			
+		}
+		else if(e.getSource() == SegmentationPanel.getInstance().next) {
+			Main.getInstance().nextCard();
 		}
 	}
 	
