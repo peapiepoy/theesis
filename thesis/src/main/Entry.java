@@ -2,6 +2,7 @@ package main;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
@@ -14,6 +15,7 @@ import javax.imageio.ImageIO;
 import inpainting_utils.TargetAreaSelection;
 import segmentation.Clustering;
 import segmentation.SplitAndMerge;
+import algorithms.inpainting.ImageInpainting;
 import view.TargetSelection;
 import view.DisplayThreePanel;
 import controller.MouseHandler;
@@ -21,20 +23,22 @@ import controller.MouseHandler;
 public class Entry {
 	
 	private static Entry instance;
-	private BufferedImage img, grayscaled;
+	private BufferedImage img, grayscaled, masked;
 	private Image oImg;
 	private TargetAreaSelection targetArea;
 	public DisplayThreePanel segmenting, inpainting;
 	private Polygon targetRegion;
-	public int [][]pixelmap;
+	public int[][] pixelmap, maskedmap;
 	public int maxTH, minTH;
 	// segmentation Split and Merge
 	private SplitAndMerge spam;
 	public Clustering clustering;
+	public ImageInpainting imageInpainting;
 	
 	// segmentation RegionGrowing
 	
 	Entry(){
+		
 		this.segmenting = new DisplayThreePanel(true);
 		this.inpainting = new DisplayThreePanel(false);
 	}
@@ -49,11 +53,11 @@ public class Entry {
 	}
 	
 	public void inpaintingProcess() {
-		this.inpainting = new DisplayThreePanel(false);
 		this.inpainting.process.setText("Inpainting Process");
+		this.inpainting.spam.setDisplayImg(masked);
+		this.inpainting.clustering.setDisplayImg(masked);
 		
-		this.inpainting.spam.setDisplayImg(img);
-		this.inpainting.clustering.setDisplayImg(grayscaled);
+		this.imageInpainting = new ImageInpainting(pixelmap, maskedmap);
 	}
 	
 	public void setImage(String path) {
@@ -89,6 +93,7 @@ public class Entry {
 		}
 		this.targetRegion = new Polygon(x, y, x.length);
 	}
+	
 	public TargetAreaSelection getTargetAreaSelection() {
 		return targetArea;
 	}
@@ -163,6 +168,29 @@ public class Entry {
 			}
 		}
 		return grayscaled;
+	}
+	
+	public BufferedImage imageMasking() {
+		this.masked = new BufferedImage(pixelmap[0].length, pixelmap.length, BufferedImage.TYPE_INT_ARGB);
+		this.maskedmap = new int[pixelmap.length][pixelmap[0].length];
+		
+		Vector xx = this.targetArea.PolygonX;
+		Vector yy = this.targetArea.PolygonY;
+		
+		for(int i=0; i < pixelmap.length; i++) {
+			for(int j=0; j<pixelmap[0].length;j++) {
+				// checks if pixel is in the targetregion
+				this.masked.setRGB(j, i, pixelmap[i][j]);
+				this.maskedmap[i][j] = pixelmap[i][j];
+				
+				if(this.targetRegion.contains(new Point(j, i))) {
+					int rgb = (100<<24) | (250<<16) | (240<<8) | 0;
+					this.masked.setRGB(j, i, rgb);
+					this.maskedmap[i][j] = rgb;
+				}
+			}
+		}
+		return masked;
 	}
 	
 	public static Entry getInstance() {

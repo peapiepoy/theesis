@@ -27,9 +27,10 @@ public class DisplayThreePanel extends JPanel{
 		process.setBounds(400,650, 200,20);
 		add(process);
 		
-		spam = new ScaledImagePanel(20, 20, "SPA,");	// 100 tanan
+		spam = new ScaledImagePanel(20, 20, "SPA,");	
 		clustering = new ScaledImagePanel(350, 222, "KMeans");
 		regionGrowing = new ScaledImagePanel(680, 424, "Region Growing");
+		
 		add(spam);
 		add(clustering);
 		add(regionGrowing);

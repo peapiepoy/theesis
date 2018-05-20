@@ -18,8 +18,8 @@ public class TargetAreaSelection extends JPanel {
 	public int xSize, ySize;
 //	public int x, y;
 	public boolean enabled, createPoly;
-	private Vector PolygonX;
-	private Vector PolygonY;
+	public Vector PolygonX;
+	public Vector PolygonY;
 	
 	
 	public TargetAreaSelection(BufferedImage img){
@@ -112,5 +112,6 @@ public class TargetAreaSelection extends JPanel {
 		PolygonX.add(x);
 		PolygonY.add(y);
 	}
+	
 	
 }

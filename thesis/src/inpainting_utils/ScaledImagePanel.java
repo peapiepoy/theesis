@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 
 
 public class ScaledImagePanel extends JPanel{
+	static final long serialVersionUID = 1L;
 	private BufferedImage displayImg = null;
 	private int x, y;
 	private String label;
@@ -18,10 +19,9 @@ public class ScaledImagePanel extends JPanel{
 		this.x = x;
 		this.y = y;
 		this.label = label;
-		init();
+		setBounds(x, 50, 300, 580);
 	}
 	public void setDisplayImg(BufferedImage displayImg) {
-		
 		this.displayImg = displayImg;
 		this.displayImg = scaleImage(displayImg, 300, 660);
 		repaint();  
@@ -64,14 +64,7 @@ public class ScaledImagePanel extends JPanel{
 	        return newImage;
 	    }
 	
-	public void init() {
-		setBounds(x, 50, 300, 580);
-	}
 	public void paint(Graphics g) {
-		
-		
-		
-
 		g.drawImage(displayImg, 0, 0, this);
 	}
 }

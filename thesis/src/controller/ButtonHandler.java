@@ -24,6 +24,8 @@ public class ButtonHandler implements ActionListener{
 		TargetSelection.getInstance().submit.addActionListener(this);
 		Entry.getInstance().segmenting.process.addActionListener(this);
 		Entry.getInstance().segmenting.next.addActionListener(this);
+		Entry.getInstance().inpainting.process.addActionListener(this);
+		Entry.getInstance().inpainting.next.addActionListener(this);
 	}
 
 	@Override
@@ -66,8 +68,9 @@ public class ButtonHandler implements ActionListener{
 		}
 		else if(e.getSource() == TargetSelection.getInstance().submit) {
 			Entry.getInstance().setPolygon(); //saves polygon in the Entry class
-//			SegmentationPanel.getInstance().setImage();
-//			SegmentationPanel.getInstance().displaySegmentationBoxes(); // displays image for segmentation
+			Entry.getInstance().imageMasking();
+			Entry.getInstance().inpainting.setImage();
+			Entry.getInstance().inpainting.displaySegmentationBoxes();
 			Entry.getInstance().inpaintingProcess();
 			Main.getInstance().nextCard(); // next page
 		}
@@ -77,6 +80,12 @@ public class ButtonHandler implements ActionListener{
 		}
 		else if(e.getSource() == Entry.getInstance().segmenting.next) {
 			Main.getInstance().nextCard();
+		}
+		else if(e.getSource() == Entry.getInstance().inpainting.process) {
+			Entry.getInstance().inpainting.flipButtons();
+		}
+		else if(e.getSource() == Entry.getInstance().inpainting.next) {
+			System.out.println("dead end yet");
 		}
 	}
 	

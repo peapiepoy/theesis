@@ -31,8 +31,8 @@ public class Main extends JFrame {
 		cards = new JPanel(cardLayout);
 		
 		fpp = FirstPagePanel.getInstance();
-		ts = TargetSelection.getInstance();
 		sp = this.entry.segmenting;
+		ts = TargetSelection.getInstance();
 		ip = this.entry.inpainting;
 		
 		bh = ButtonHandler.getInstance();
