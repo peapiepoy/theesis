@@ -1,36 +1,40 @@
 package main;
+
 import java.awt.CardLayout;
 import java.awt.Color;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
 import controller.ButtonHandler;
 import view.FirstPagePanel;
 import view.TargetSelection;
-import view.SegmentationPanel;
-
 
 public class Main extends JFrame {
+	private static Main instance;
 	private JPanel cards;
 	private JPanel fpp;
 	private JPanel ts;
-	private JPanel sp;
-	private static Main instance;
+	private JPanel sp, ip;
 	private Entry entry;
 	private CardLayout cardLayout;
-	public final int sizeX=1000, sizeY=700;
+	public int sizeX, sizeY;
 	ButtonHandler bh;
 	
 	public Main() {
 		setBackground(Color.cyan);
+		this.sizeX = 1000;
+		this.sizeY = 700;
+		
+		this.entry = Entry.getInstance();
+		
 		this.cardLayout = new CardLayout();
 		cards = new JPanel(cardLayout);
 		
 		fpp = FirstPagePanel.getInstance();
 		ts = TargetSelection.getInstance();
-		sp = SegmentationPanel.getInstance();
+		sp = this.entry.segmenting;
+		ip = this.entry.inpainting;
 		
-		this.entry = new Entry();
 		bh = ButtonHandler.getInstance();
 		
 		frameSetup();
@@ -38,6 +42,7 @@ public class Main extends JFrame {
 		cards.add(fpp, "first");
 		cards.add(sp, "second");
 		cards.add(ts, "third");
+		cards.add(ip, "fourth");
 		
 		add(cards);
 		setResizable(false);

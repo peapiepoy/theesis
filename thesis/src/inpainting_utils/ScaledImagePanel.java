@@ -1,26 +1,20 @@
 package inpainting_utils;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-
 import javax.swing.JPanel;
 
-import main.Entry;
 
-
-public class SegmentationDisplay extends JPanel{
+public class ScaledImagePanel extends JPanel{
 	private BufferedImage displayImg = null;
 	private int x, y;
 	private String label;
 	private final String one = "SPAM", two = "KMeans", three = "Region Growing";
 	public boolean segmenting = false;
 	
-	public SegmentationDisplay(int x, int y, String label){
+	public ScaledImagePanel(int x, int y, String label){
 		this.x = x;
 		this.y = y;
 		this.label = label;

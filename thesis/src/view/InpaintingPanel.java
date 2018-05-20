@@ -9,6 +9,11 @@ public class InpaintingPanel extends JPanel{
 	
 	
 	public InpaintingPanel() {
+		setLayout(null);
+		
+		inpaint = new JButton("Inpainting Process");
+		inpaint.setBounds(400, 650, 200, 20);
+		
 		
 	}
 

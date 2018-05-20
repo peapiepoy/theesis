@@ -8,7 +8,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import view.FirstPagePanel;
-import view.SegmentationPanel;
+import view.DisplayThreePanel;
 import view.TargetSelection;
 import main.Entry;
 import main.Main;
@@ -22,12 +22,13 @@ public class ButtonHandler implements ActionListener{
 		TargetSelection.getInstance().setTAB.addActionListener(this);
 		TargetSelection.getInstance().reset.addActionListener(this);
 		TargetSelection.getInstance().submit.addActionListener(this);
-		SegmentationPanel.getInstance().segment.addActionListener(this);
-		SegmentationPanel.getInstance().next.addActionListener(this);
+		Entry.getInstance().segmenting.process.addActionListener(this);
+		Entry.getInstance().segmenting.next.addActionListener(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
 		if(e.getSource() == FirstPagePanel.getInstance().uploadB) {
 			JFileChooser jfc = new JFileChooser();
 			jfc.setCurrentDirectory(new File(System.getProperty("user.home")+"/git/theesis/thesis/images"));
@@ -46,8 +47,8 @@ public class ButtonHandler implements ActionListener{
 			}
 			Main.getInstance().nextCard();
 			
-			SegmentationPanel.getInstance().setImage();
-			SegmentationPanel.getInstance().displaySegmentationBoxes(); // displays image for segmentation
+			Entry.getInstance().segmenting.setImage();
+			Entry.getInstance().segmenting.displaySegmentationBoxes(); // displays image for segmentation
 		}
 		
 		/*
@@ -67,14 +68,14 @@ public class ButtonHandler implements ActionListener{
 			Entry.getInstance().setPolygon(); //saves polygon in the Entry class
 //			SegmentationPanel.getInstance().setImage();
 //			SegmentationPanel.getInstance().displaySegmentationBoxes(); // displays image for segmentation
+			Entry.getInstance().inpaintingProcess();
 			Main.getInstance().nextCard(); // next page
 		}
-		else if(e.getSource() == SegmentationPanel.getInstance().segment) {
+		else if(e.getSource() == Entry.getInstance().segmenting.process) {
 			Entry.getInstance().segmentationProcess();
-			SegmentationPanel.getInstance().flipButtons();
-			
+			Entry.getInstance().segmenting.flipButtons();
 		}
-		else if(e.getSource() == SegmentationPanel.getInstance().next) {
+		else if(e.getSource() == Entry.getInstance().segmenting.next) {
 			Main.getInstance().nextCard();
 		}
 	}

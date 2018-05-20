@@ -15,37 +15,46 @@ import inpainting_utils.TargetAreaSelection;
 import segmentation.Clustering;
 import segmentation.SplitAndMerge;
 import view.TargetSelection;
-import view.SegmentationPanel;
+import view.DisplayThreePanel;
 import controller.MouseHandler;
 
 public class Entry {
+	
 	private static Entry instance;
 	private BufferedImage img, grayscaled;
 	private Image oImg;
 	private TargetAreaSelection targetArea;
+	public DisplayThreePanel segmenting, inpainting;
 	private Polygon targetRegion;
 	public int [][]pixelmap;
 	public int maxTH, minTH;
 	// segmentation Split and Merge
 	private SplitAndMerge spam;
 	public Clustering clustering;
+	
 	// segmentation RegionGrowing
 	
 	Entry(){
-		
+		this.segmenting = new DisplayThreePanel(true);
+		this.inpainting = new DisplayThreePanel(false);
 	}
+	
 	public void segmentationProcess() {
 		this.spam = new SplitAndMerge(img);
 		this.clustering = new Clustering(img);
 		
-		SegmentationPanel.getInstance().spam.setDisplayImg(this.spam.getSegmentedImage());
+		this.segmenting.spam.setDisplayImg(this.spam.getSegmentedImage());
+		this.segmenting.clustering.setDisplayImg(this.clustering.getSegmentedImage());
 		
-		SegmentationPanel.getInstance().clustering.segmenting = true;
-		SegmentationPanel.getInstance().clustering.setDisplayImg(this.clustering.getSegmentedImage());
-		
-		System.out.println("Entry.segmentationProcess() ends");
 	}
 	
+	public void inpaintingProcess() {
+		this.inpainting = new DisplayThreePanel(false);
+		this.inpainting.process.setText("Inpainting Process");
+		
+		this.inpainting.spam.setDisplayImg(img);
+		this.inpainting.clustering.setDisplayImg(grayscaled);
+	}
 	
 	public void setImage(String path) {
 		try {
