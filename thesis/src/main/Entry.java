@@ -34,6 +34,7 @@ public class Entry {
 	private SplitAndMerge spam;
 	public Clustering clustering;
 	public ImageInpainting imageInpainting;
+	public int[] maskColor = {100, 0, 255, 0, 0};
 	
 	// segmentation RegionGrowing
 	
@@ -184,7 +185,7 @@ public class Entry {
 				this.maskedmap[i][j] = pixelmap[i][j];
 				
 				if(this.targetRegion.contains(new Point(j, i))) {
-					int rgb = (100<<24) | (250<<16) | (240<<8) | 0;
+					int rgb = (maskColor[0]<<24) | (maskColor[1]<<16) | (maskColor[2]<<8) | maskColor[3];
 					this.masked.setRGB(j, i, rgb);
 					this.maskedmap[i][j] = rgb;
 				}

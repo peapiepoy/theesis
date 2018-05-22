@@ -19,7 +19,7 @@ public class Clustering {
 	public SubtractiveClustering subtractiveClustering;
 	public KMeans kmeans;
 	
-	public final int kCluster = 3;
+	public final int kCluster = 4;
 	
 	public Clustering(BufferedImage img) {
 		this.img = img;
