@@ -44,6 +44,9 @@ public class Entry {
 		this.inpainting = new DisplayThreePanel(false);
 	}
 	
+/*
+ * calls the segmentation process on each algos	
+ */
 	public void segmentationProcess() {
 		this.spam = new SplitAndMerge(img);
 		this.clustering = new Clustering(img);
