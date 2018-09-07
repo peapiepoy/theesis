@@ -68,6 +68,7 @@ public class Clustering {
 		upperGap = 255-maxTH;
 		fmax = 255;
 		fmin = minTH - upperGap;
+		
 		pixel1 = ( (fmax-fmin)/ (maxTH - minTH) );
 		
 		System.out.println("maxTH: "+maxTH+"  minTH: "+minTH+" fmin:"+fmin+" pixel1:"+pixel1);

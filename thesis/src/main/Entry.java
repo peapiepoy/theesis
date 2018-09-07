@@ -39,13 +39,12 @@ public class Entry {
 	// segmentation RegionGrowing
 	
 	Entry(){
-		
 		this.segmenting = new DisplayThreePanel(true);
 		this.inpainting = new DisplayThreePanel(false);
 	}
 	
 /*
- * calls the segmentation process on each algos	
+ *  calls each segmentation process	
  */
 	public void segmentationProcess() {
 		this.spam = new SplitAndMerge(img);
@@ -56,6 +55,9 @@ public class Entry {
 		
 	}
 	
+/*
+ * 	when inpainting button is clicked	
+ */
 	public void inpaintingProcess() {
 		this.inpainting.process.setText("Inpainting Process");
 		this.inpainting.spam.setDisplayImg(masked);
@@ -64,6 +66,9 @@ public class Entry {
 		this.imageInpainting = new ImageInpainting(pixelmap, maskedmap);
 	}
 	
+/*
+ *  image set for target selection in the inpainting process
+ */
 	public void setImage(String path) {
 		try {
 			this.oImg = ImageIO.read(new File(""+path));
@@ -83,9 +88,11 @@ public class Entry {
 		
 		MouseHandler.getInstance();
 	}
+	
 	public BufferedImage getImage() {
 		return img;
 	}
+	
 	public void setPolygon() {
 		Vector xx = getTargetAreaSelection().getPointsX();
 		Vector yy = getTargetAreaSelection().getPointsY();
@@ -101,10 +108,11 @@ public class Entry {
 	public TargetAreaSelection getTargetAreaSelection() {
 		return targetArea;
 	}
-	/*
-	 * creates representation of the image to a 2d array
-	 * and sidelining setting the max and min pixel :)
-	 */
+	
+/*
+ * creates representation of the image to a 2d array
+ * and setting the max and min pixel 
+ */
 	public void toArray() {
 		int iw = img.getWidth();
 		int ih = img.getHeight();
@@ -185,12 +193,12 @@ public class Entry {
 			for(int j=0; j<pixelmap[0].length;j++) {
 				// checks if pixel is in the targetregion
 				this.masked.setRGB(j, i, pixelmap[i][j]);
-				this.maskedmap[i][j] = pixelmap[i][j];
+				this.maskedmap[i][j] = 1;
 				
 				if(this.targetRegion.contains(new Point(j, i))) {
 					int rgb = (maskColor[0]<<24) | (maskColor[1]<<16) | (maskColor[2]<<8) | maskColor[3];
 					this.masked.setRGB(j, i, rgb);
-					this.maskedmap[i][j] = rgb;
+					this.maskedmap[i][j] = -1;
 				}
 			}
 		}

@@ -19,9 +19,11 @@ public class ButtonHandler implements ActionListener{
 	
 	public ButtonHandler() {
 		FirstPagePanel.getInstance().uploadB.addActionListener(this);
+		
 		TargetSelection.getInstance().setTAB.addActionListener(this);
 		TargetSelection.getInstance().reset.addActionListener(this);
 		TargetSelection.getInstance().submit.addActionListener(this);
+		
 		Entry.getInstance().segmenting.process.addActionListener(this);
 		Entry.getInstance().segmenting.next.addActionListener(this);
 		Entry.getInstance().inpainting.process.addActionListener(this);
@@ -30,7 +32,10 @@ public class ButtonHandler implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+
+/*
+ * 		FirstPagePanel buttons		
+ */
 		if(e.getSource() == FirstPagePanel.getInstance().uploadB) {
 			JFileChooser jfc = new JFileChooser();
 			jfc.setCurrentDirectory(new File(System.getProperty("user.home")+"/git/theesis/thesis/images"));
@@ -53,9 +58,9 @@ public class ButtonHandler implements ActionListener{
 			Entry.getInstance().segmenting.displaySegmentationBoxes(); // displays image for segmentation
 		}
 		
-		/*
-		 * enable defining the target region for inpainting
-		 */
+/*
+ * 			TargetSelection class buttons
+ */
 		else if(e.getSource() == TargetSelection.getInstance().setTAB) {
 			Entry.getInstance().getTargetAreaSelection().enableSelection(true);
 			TargetSelection.getInstance().setTAB.setEnabled(false);
@@ -74,6 +79,10 @@ public class ButtonHandler implements ActionListener{
 			Entry.getInstance().inpaintingProcess();
 			Main.getInstance().nextCard(); // next page
 		}
+		
+/*
+ * 			E N T R Y class buttons		
+ */
 		else if(e.getSource() == Entry.getInstance().segmenting.process) {
 			Entry.getInstance().segmentationProcess();
 			Entry.getInstance().segmenting.flipButtons();
