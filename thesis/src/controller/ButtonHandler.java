@@ -61,7 +61,7 @@ public class ButtonHandler implements ActionListener{
 /*
  * 			TargetSelection class buttons
  */
-		else if(e.getSource() == TargetSelection.getInstance().setTAB) {
+		else if(e.getSource() == TargetSelection.getInstance().setTAB) { //TAB = target area button
 			Entry.getInstance().getTargetAreaSelection().enableSelection(true);
 			TargetSelection.getInstance().setTAB.setEnabled(false);
 			TargetSelection.getInstance().setTAB.setVisible(false);
@@ -87,9 +87,11 @@ public class ButtonHandler implements ActionListener{
 			Entry.getInstance().segmentationProcess();
 			Entry.getInstance().segmenting.flipButtons();
 		}
+		
 		else if(e.getSource() == Entry.getInstance().segmenting.next) {
 			Main.getInstance().nextCard();
 		}
+		
 		else if(e.getSource() == Entry.getInstance().inpainting.process) {
 			Entry.getInstance().inpainting.flipButtons();
 		}
