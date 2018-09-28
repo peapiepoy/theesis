@@ -33,6 +33,8 @@ public class Clustering {
 		kmeans = new KMeans(pcsMatrix, kCluster);
 		kmeans.process();
 		this.segmentedImage = kmeans.segmentedImage();
+		//this.segmentedImage = pcsImg;
+		
 	}
 	
 	public void pcsMatrixToString() {
@@ -43,10 +45,7 @@ public class Clustering {
 				int r = (rgb>>16)&0xff;
 				int g = (rgb>>8)&0xff;
 				int z = rgb&0xff;
-				
-				System.out.print(" "+ r+","+g+","+z);
 			}
-			System.out.println();
 		}
 	}
 	
