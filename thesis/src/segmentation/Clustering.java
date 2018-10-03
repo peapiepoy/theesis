@@ -31,7 +31,7 @@ public class Clustering {
 //		pcsMatrixToString();
 //		subtractiveClustering = new SubtractiveClustering(pcsMatrix, kCluster);
 		kmeans = new KMeans(pcsMatrix, kCluster);
-		kmeans.process();
+		
 		this.segmentedImage = kmeans.segmentedImage();
 		//this.segmentedImage = pcsImg;
 		

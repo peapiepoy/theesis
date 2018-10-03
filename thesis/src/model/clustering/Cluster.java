@@ -27,7 +27,7 @@ public class Cluster {
 		if (this.points.size() > 0) {
 			
 			int red = 0, green = 0, blue = 0;
-			
+		d
 			for (Point point: points) {
 				
 				int rgb = pixelmap[point.x][point.y];

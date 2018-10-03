@@ -25,8 +25,10 @@ public class KMeans {
 		this.col = pixelmap[0].length;
 		this.k = k;
 		this.pixelCluster = new int[row][col];
-		
+		System.out.println("CONSTRUCTOR r: "+row+ " col: "+col);
 		segmented = new BufferedImage(col, row, BufferedImage.TYPE_INT_ARGB);
+		
+		process();
 	}
 	
 	public void process() {
@@ -60,11 +62,12 @@ public class KMeans {
 	 */
 	private void rebuildClusters() {
 		clusters = new Cluster[this.k];
-		
+		System.out.print("rebuildcluster() r: "+row+ " col: "+col);
 		//[O(p) : p for # of pixels] time complexity, since iterating through all pixels
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < col; j++) {
-				int clusterIndex = pixelCluster[j][i];
+				
+				int clusterIndex = this.pixelCluster[i][j];
 				
 				if (clusters[clusterIndex] == null) {
 					clusters[clusterIndex] = new Cluster(pixelmap);
@@ -147,7 +150,8 @@ public class KMeans {
 		int gp = (pixel>>8)&0xff;
 		int bp = pixel&0xff;
 		
-		distance = Math.pow((rp - centroid[0]), 2) + Math.pow((gp - centroid[1]), 2) + Math.pow((bp - centroid[2]), 2);
+		distance = Math.pow((rp - centroid[0]), 2) + Math.pow((gp - centroid[1]), 2) 
+						+ Math.pow((bp - centroid[2]), 2);
 		
 		return Math.sqrt(distance);
 	}
