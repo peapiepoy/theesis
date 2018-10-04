@@ -95,7 +95,6 @@ public class KMeans {
 		
 		// do while loop is used to allow one iteration of the program before checking for a change
 		do {
-			System.out.println("->");
 			changeOccurred = false;
 			
 			for (int i = 0; i < row; i++) {
