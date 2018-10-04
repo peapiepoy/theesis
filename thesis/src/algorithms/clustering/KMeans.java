@@ -91,11 +91,10 @@ public class KMeans {
 	 * if a change occurred, then the algorithm must be repeated again until no change occurs (indication of the clusters stabilizing)
 	 */
 	private void generateClusters() {
-		boolean changeOccurred;
+		boolean changeOccurred = false;
 		
 		// do while loop is used to allow one iteration of the program before checking for a change
 		do {
-			System.out.println("->");
 			changeOccurred = false;
 			
 			for (int i = 0; i < row; i++) {

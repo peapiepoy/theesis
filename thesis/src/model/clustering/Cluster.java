@@ -24,6 +24,7 @@ public class Cluster {
 	 * O(p) : p for # of points
 	 */
 	public void updateCentroid() {
+		
 		if (this.points.size() > 0) {
 			
 			int red = 0, green = 0, blue = 0;
