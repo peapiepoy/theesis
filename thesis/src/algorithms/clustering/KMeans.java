@@ -62,7 +62,7 @@ public class KMeans {
 	 */
 	private void rebuildClusters() {
 		clusters = new Cluster[this.k];
-		System.out.print("rebuildcluster() r: "+row+ " col: "+col);
+		System.out.println("rebuildcluster() r: "+row+ " col: "+col);
 		//[O(p) : p for # of pixels] time complexity, since iterating through all pixels
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < col; j++) {
