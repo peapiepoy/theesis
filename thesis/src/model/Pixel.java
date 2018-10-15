@@ -34,7 +34,7 @@ public class Pixel {
 	}
 	
 	public int getPixelR(){
-		return this.color.getRed();
+		return this.color.getRed();       
 	}
 	
 	public int getPixelG(){
