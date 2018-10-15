@@ -41,6 +41,7 @@ public class Entry {
 	Entry(){
 		this.segmenting = new DisplayThreePanel(true);
 		this.inpainting = new DisplayThreePanel(false);
+		
 	}
 	
 /*

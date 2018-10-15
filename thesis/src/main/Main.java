@@ -23,7 +23,7 @@ public class Main extends JFrame {
 	public Main() {
 		setBackground(Color.cyan);
 		this.sizeX = 1000;
-		this.sizeY = 700;
+		this.sizeY = 750;
 		
 		this.entry = Entry.getInstance();
 		
@@ -58,7 +58,7 @@ public class Main extends JFrame {
 			setTitle("Segmentation X Inpainting");
 			setSize(sizeX, sizeY);
 			setLocationRelativeTo(null);
-			setUndecorated(true);
+			//setUndecorated(true);
 		}
 		
 		public void nextCard() {

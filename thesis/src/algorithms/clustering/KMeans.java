@@ -31,7 +31,7 @@ public class KMeans {
 		process();
 	}
 	
-	public void process() {
+	private void process() {
 		// compute euclidean distance of each centroids from every pixel
 		assignClustersRandomly();
 		rebuildClusters();
@@ -62,7 +62,7 @@ public class KMeans {
 	 */
 	private void rebuildClusters() {
 		clusters = new Cluster[this.k];
-		System.out.print("rebuildcluster() r: "+row+ " col: "+col);
+		System.out.print("rebuildcluster()");
 		//[O(p) : p for # of pixels] time complexity, since iterating through all pixels
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < col; j++) {
@@ -77,7 +77,7 @@ public class KMeans {
 				clusters[clusterIndex].addPoint(new Point(j, i));
 			}
 		}
-		
+		System.out.println("....done");
 		//[O(p*c) p for # of pixels and c for # of clusters] time complexity
 		for (int i = 0; i < clusters.length; i++) {
 			if (clusters[i] == null)
@@ -92,7 +92,7 @@ public class KMeans {
 	 */
 	private void generateClusters() {
 		boolean changeOccurred;
-		
+		System.out.println("generateclusters()...");
 		// do while loop is used to allow one iteration of the program before checking for a change
 		do {
 			changeOccurred = false;

@@ -33,20 +33,8 @@ public class Clustering {
 		kmeans = new KMeans(pcsMatrix, kCluster);
 		
 		this.segmentedImage = kmeans.segmentedImage();
-		//this.segmentedImage = pcsImg;
+		this.segmentedImage = pcsImg;
 		
-	}
-	
-	public void pcsMatrixToString() {
-		System.out.println("\t\tPCS Matrix from CLustering.java");
-		for(int b=40; b<60; b++) {
-			for (int n=40; n<60; n++) {
-				int rgb = pcsMatrix[b][n];
-				int r = (rgb>>16)&0xff;
-				int g = (rgb>>8)&0xff;
-				int z = rgb&0xff;
-			}
-		}
 	}
 	
 	public void setImage(BufferedImage displayImage) {
@@ -93,6 +81,18 @@ public class Clustering {
 		}
 		
 		return pcsImg;
+	}
+	
+	public void pcsMatrixToString() {
+		System.out.println("\t\tPCS Matrix from CLustering.java");
+		for(int b=40; b<60; b++) {
+			for (int n=40; n<60; n++) {
+				int rgb = pcsMatrix[b][n];
+				int r = (rgb>>16)&0xff;
+				int g = (rgb>>8)&0xff;
+				int z = rgb&0xff;
+			}
+		}
 	}
 	
 	
