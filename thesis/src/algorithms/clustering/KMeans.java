@@ -2,6 +2,8 @@ package algorithms.clustering;
 
 import model.clustering.Cluster;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ public class KMeans {
 	private int [][]pixelCluster;
 	private int row, col;
 	private Cluster[] clusters;
-	public BufferedImage segmented;
+	public static BufferedImage segmented;
 	private int k;
 	
 	
@@ -28,153 +30,135 @@ public class KMeans {
 		System.out.println("CONSTRUCTOR r: "+row+ " col: "+col);
 		segmented = new BufferedImage(col, row, BufferedImage.TYPE_INT_ARGB);
 		
-		process();
+		//this.segmented = kmeans_helper();
 	}
 	
-	private void process() {
-		// compute euclidean distance of each centroids from every pixel
-		assignClustersRandomly();
-		rebuildClusters();
-		generateClusters();
-	}
-	
-	/**
-	 * assign all pixels with a random cluster
-	 * [O(p) : p for # of pixels] time complexity
-	 */
-	private void assignClustersRandomly() {
-		Random random = new Random();
+	public void process() {
 		
-		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < col; j++) {
-				this.pixelCluster[i][j] = random.nextInt(this.k);
-			}
-		}
-		
-		System.out.println("Completed assigning clusters randomly to all pixels (stored in cluster array in ImageMatrix).");	
 	}
 	
-	/**
-	 * Two actions:
-	 * 1)adds all the points associated with a certain cluster into that respective cluster
-	 * 2)updates the centroids of all of the clusters
-	 * [O(p*c + p) : p for # of pixels and c for # of clusters] time complexity
-	 */
-	private void rebuildClusters() {
-		clusters = new Cluster[this.k];
-		System.out.print("rebuildcluster()");
-		//[O(p) : p for # of pixels] time complexity, since iterating through all pixels
-		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < col; j++) {
-				
-				int clusterIndex = this.pixelCluster[i][j];
-				
-				if (clusters[clusterIndex] == null) {
-					clusters[clusterIndex] = new Cluster(pixelmap);
+	private static BufferedImage kmeans_helper(BufferedImage originalImage, int k){
+		int w=originalImage.getWidth();
+		int h=originalImage.getHeight();
+		BufferedImage kmeansImage = new BufferedImage(w,h,originalImage.getType());
+		Graphics2D g = kmeansImage.createGraphics();
+		g.drawImage(originalImage, 0, 0, w,h , null);
+		// Read rgb values from the image
+		int[] rgb=new int[w*h];
+		int count=0;
+		int min = Integer.MAX_VALUE;
+		int max = Integer.MIN_VALUE;
+		for(int i=0;i<w;i++){
+		    for(int j=0;j<h;j++){
+				int rgbVal = kmeansImage.getRGB(i,j);			
+				rgb[count++] = rgbVal;
+				if (rgbVal < min){
+					min = rgbVal;
 				}
-				// the order is switched because the x coordinate is i (width iteration) 
-				//and the y coordinate is j (height iteration)
-				clusters[clusterIndex].addPoint(new Point(j, i));
-			}
+				if(rgbVal > max){
+					max = rgbVal;
+				}
+		    }
 		}
-		System.out.println("....done");
-		//[O(p*c) p for # of pixels and c for # of clusters] time complexity
-		for (int i = 0; i < clusters.length; i++) {
-			if (clusters[i] == null)
-				continue;
-			clusters[i].updateCentroid();
+		// Call kmeans algorithm: update the rgb values
+		kmeans(rgb,k, min, max);
+	
+		// Write the new rgb values to the image
+		count=0;
+		for(int i=0;i<w;i++){
+		    for(int j=0;j<h;j++){
+			kmeansImage.setRGB(i,j,rgb[count++]);
+		    }
 		}
+		return kmeansImage;
 	}
 	
-	/**
-	 * uses the euclidean distance to find the nearest centroid to a point (for all points)
-	 * if a change occurred, then the algorithm must be repeated again until no change occurs (indication of the clusters stabilizing)
-	 */
-	private void generateClusters() {
-		boolean changeOccurred;
-		System.out.println("generateclusters()...");
-		// do while loop is used to allow one iteration of the program before checking for a change
-		do {
-			changeOccurred = false;
-			
-			for (int i = 0; i < row; i++) {
-				for (int j = 0; j < col; j++) {
-					double minDistance = Double.MAX_VALUE;
-					int bestClusterIndex = -1;
-					
-					for (int clusterIndex = 0; clusterIndex < clusters.length; clusterIndex++) {
-						
-						// an empty cluster (best to use this instead of looking
-						// for another cluster, since we can make this the closest
-						if (clusters[clusterIndex] == null) {
-							clusters[clusterIndex] = new Cluster(pixelmap);
-							minDistance = 0;
-							bestClusterIndex = clusterIndex;
-							break;
-						} else {
-							double computedDistance = euclideanDistance(this.pixelmap[i][j],
-																		clusters[clusterIndex].getCentroid());
+	// Your k-means code goes here
+    // Update the array rgb by assigning each entry in the rgb array to its cluster center
+    private static void kmeans(int[] rgb, int k, int min, int max){
 
-							if (computedDistance < minDistance) {
-								minDistance = computedDistance;
-								bestClusterIndex = clusterIndex;
-							}
-						}
-					}
-					
-					if (this.pixelCluster[i][j] != bestClusterIndex) {
-						this.pixelCluster[i][j] = bestClusterIndex;
-						changeOccurred = true;
-					}
-					
-				}
-			}
-			
-			if (changeOccurred)
-				rebuildClusters();
-			
-			
-		} while (changeOccurred);
-		
-		System.out.println("Completed generating the clusters for the current image.");	
-	}
-	
-	/*
-	 * Computes the euclidean distance between two points
-	 * [O(length of the vectors) : length of the vectors represent the depth of the data (in this case: 3 *RGB*)] time complexity
-	 */
-	private double euclideanDistance(int pixel, int[] centroid) {
-		double distance = 0;
-		int rp = (pixel>>16)&0xff;
-		int gp = (pixel>>8)&0xff;
-		int bp = pixel&0xff;
-		
-		distance = Math.pow((rp - centroid[0]), 2) + Math.pow((gp - centroid[1]), 2) 
-						+ Math.pow((bp - centroid[2]), 2);
-		
-		return Math.sqrt(distance);
-	}
-	
-	public BufferedImage segmentedImage() {
-		int[] wood = new int[]{222,184,135};
-		int[] indigo = new int[]{75,0,130};
-		int[] lawngreen = new int[]{124,252,0};
-		int[] pxl = new int[3];
-		
-		for(int y = 0; y < pixelCluster.length; y++) {
-			for( int x=0; x < pixelCluster[0].length; x++) {
-				if(pixelCluster[y][x] == 0)
-					pxl = wood;
-				else if(pixelCluster[y][x] == 1)
-					pxl =indigo;
-				else if(pixelCluster[y][x] == 2)
-					pxl =lawngreen;
+    	double[][] means = new double[k+1][4];
+    	//initializing k mean values
+    	long[] sum = new long[k+1];
+    	long[] count = new long[k+1];
+    	double avg=(min+max)/2.0;
+    	for(int i = 1; i<= k; i++){
+    		Random rand = new Random();
+    		means[i][0] = rand.nextDouble()*255;
+    		means[i][1] = rand.nextDouble()*255;
+    		means[i][2] = rand.nextDouble()*255;
+    		means[i][3] = rand.nextDouble()*255;
+    		sum[i] = 0;
+    		count[i] = 0;
+    	}
+    	int[] red = new int[rgb.length];
+    	int[] blue = new int[rgb.length];
+    	int[] green = new int[rgb.length];
+    	int[] alpha = new int[rgb.length];
+    	for (int i=0; i<rgb.length; i++){
+        	Color c = new Color(rgb[i]);
+        	red[i] = c.getRed();
+        	blue[i] = c.getBlue();
+        	green[i] = c.getGreen();
+        	alpha[i]=c.getAlpha();
+    	}
+    	int[] curAssignments = new int[rgb.length];
+    	boolean change = true;
+    	while(change){
+    		//finding the closest mean
+    		change = false;
+    		int[] tempAssignments=new int[rgb.length];
+	    	for(int x = 0; x < rgb.length; x++){
+	    		double closest = Double.MAX_VALUE;
+	    		for(int m = 1; m <= k; m++){
+	    			
+	    			double distance = ( Math.pow((double)(red[x] - means[m][0]), 2) + Math.pow((double)(blue[x] - means[m][1]), 2) + Math.pow((double)(green[x] - means[m][2]), 2)+ Math.pow((double)(alpha[x] - means[m][3]), 2));
+	    			if (distance < closest){
+	    				tempAssignments[x]=m;
+	    				closest = distance;
+		    			}
+	    			}		    			
+	     		}
+	    	//update step
+	    	double changeVal=0;
+	    	for(int x=0;x<rgb.length;x++){
+	    		if(curAssignments[x]!=tempAssignments[x])changeVal+=1;
+	    	}
+	    	if(changeVal>0){
+	    		change=true;
+	    		for(int x=0;x<rgb.length;x++){
+		    		curAssignments[x]=tempAssignments[x];
+		    	}
+	    		for(int m=1; m<= k; m++){
+		        	sum[m] = 0;
+		        	count[m] = 0;
+	    		}
+	    		
+		    	for(int i=0; i< rgb.length; i++){
+		    			int meanInd = tempAssignments[i];
+		    			count[meanInd] += 1;
+		    			if(count[meanInd]==1){
+		    				means[meanInd][0]=red[i];
+		    				means[meanInd][1]=blue[i];
+		    				means[meanInd][2]=green[i];
+		    				means[meanInd][3]=alpha[i];
+		    			}
+		    			else{
+		    				double prevC=(double)count[meanInd]-1.0;
+			    			means[meanInd][0]=(prevC/(prevC+1.0))*(means[meanInd][0]+(red[i]/prevC));
+			    			means[meanInd][1]=(prevC/(prevC+1.0))*(means[meanInd][1]+(blue[i]/prevC));
+			    			means[meanInd][2]=(prevC/(prevC+1.0))*(means[meanInd][2]+(green[i]/prevC));
+			    			means[meanInd][3]=(prevC/(prevC+1.0))*(means[meanInd][3]+(alpha[i]/prevC));
+			    			
+		    			}
+		    					    			
+		    	}
+	    	}
 				
-				int pix = (80<<24) | (pxl[0]<<16) | (pxl[1]<<8) | pxl[2];
-				this.segmented.setRGB(x,y,pix);
-			}
 		}
-		
-		return segmented;
-	}
+    	for(int i=0; i<rgb.length; i++){    		
+    		rgb[i]=(int)means[curAssignments[i]][3]<<24|(int)means[curAssignments[i]][0]<<16 | (int)means[curAssignments[i]][2]<<8 | (int)means[curAssignments[i]][1]<<0;
+    	}
+}
+	
 }
