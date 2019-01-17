@@ -16,12 +16,15 @@ public class KMeans {
 	private int row, col;
 	private Cluster[] clusters;
 	public static BufferedImage segmented;
+	private BufferedImage originalImage;
 	private int k;
 	
 	
 //	public KMeans(ArrayList<Point> clusterCenters, int [][]pixelmap) {
-	public KMeans( int [][]pixelmap, int k) {
+//	public KMeans( int [][]pixelmap, int k) {
+	public KMeans(BufferedImage oImg, int [][]pixelmap, int k) {
 //		this.clusterCenters = clusterCenters;
+		this.originalImage = oImg;
 		this.pixelmap = pixelmap;
 		this.row = pixelmap.length;
 		this.col = pixelmap[0].length;
@@ -31,10 +34,11 @@ public class KMeans {
 		segmented = new BufferedImage(col, row, BufferedImage.TYPE_INT_ARGB);
 		
 		//this.segmented = kmeans_helper();
+		process();
 	}
 	
 	public void process() {
-		
+		this.segmented = kmeans_helper(originalImage, k);
 	}
 	
 	private static BufferedImage kmeans_helper(BufferedImage originalImage, int k){

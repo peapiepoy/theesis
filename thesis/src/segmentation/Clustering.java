@@ -30,9 +30,9 @@ public class Clustering {
 		pcsImg = partialContrastStretching();
 //		pcsMatrixToString();
 //		subtractiveClustering = new SubtractiveClustering(pcsMatrix, kCluster);
-		kmeans = new KMeans(pcsMatrix, kCluster);
+		kmeans = new KMeans(img, pcsMatrix, kCluster);
 		
-		this.segmentedImage = kmeans.segmentedImage();
+		this.segmentedImage = KMeans.segmented;
 		this.segmentedImage = pcsImg;
 		
 	}
