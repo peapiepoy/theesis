@@ -63,7 +63,7 @@ public class ButtonHandler implements ActionListener{
  */
 		else if(e.getSource() == Entry.getInstance().segmenting.process) {
 			Entry.getInstance().segmentationProcess();
-			Entry.getInstance().segmenting.flipButtons();
+			Entry.getInstance().segmenting.flipButtons();			// making "process" button to "next" button
 		}
 		
 		else if(e.getSource() == Entry.getInstance().segmenting.next) {

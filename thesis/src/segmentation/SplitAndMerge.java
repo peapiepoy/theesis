@@ -21,6 +21,8 @@ public class SplitAndMerge {
 	public void setImage(BufferedImage displayImage) {
 		this.segmentedImage = displayImage;
 	}
+	
+	
 	public BufferedImage getSegmentedImage() {
 		return grayscaled;
 	}

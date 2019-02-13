@@ -39,6 +39,7 @@ public class DisplayThreePanel extends JPanel{
 	public void flipButtons() {
 		this.next.setEnabled(true);
 		this.next.setVisible(true);
+		
 		this.process.setEnabled(false);
 		this.process.setVisible(false);
 	}

@@ -27,8 +27,7 @@ public class ScaledImagePanel extends JPanel{
 		repaint();  
 	}
 	
-	public BufferedImage scaleImage(BufferedImage image,
-	        int newWidth, int newHeight) {
+	public BufferedImage scaleImage(BufferedImage image, int newWidth, int newHeight) {
 	        // Make sure the aspect ratio is maintained, so the image is not distorted
 	        double thumbRatio = (double) newWidth / (double) newHeight;
 	        int imageWidth = image.getWidth(null);

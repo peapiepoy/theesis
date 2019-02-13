@@ -1,47 +1,45 @@
 package algorithms.clustering;
-
-import model.clustering.Cluster;
+/*** 
+Author :Chandni Shankar, Varun Kumar Reddy B
+The University of Texas at Dallas
+***/
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Random;
-
+ 
 public class KMeans {
-	private ArrayList<Point> clusterCenters;
-	private int [][]pixelmap;
-	private int [][]pixelCluster;
-	private int row, col;
-	private Cluster[] clusters;
-	public static BufferedImage segmented;
-	private BufferedImage originalImage;
-	private int k;
 	
+	public static BufferedImage output = null;
 	
-//	public KMeans(ArrayList<Point> clusterCenters, int [][]pixelmap) {
-//	public KMeans( int [][]pixelmap, int k) {
-	public KMeans(BufferedImage oImg, int [][]pixelmap, int k) {
-//		this.clusterCenters = clusterCenters;
-		this.originalImage = oImg;
-		this.pixelmap = pixelmap;
-		this.row = pixelmap.length;
-		this.col = pixelmap[0].length;
-		this.k = k;
-		this.pixelCluster = new int[row][col];
-		System.out.println("CONSTRUCTOR r: "+row+ " col: "+col);
-		segmented = new BufferedImage(col, row, BufferedImage.TYPE_INT_ARGB);
-		
-		//this.segmented = kmeans_helper();
-		process();
-	}
-	
-	public void process() {
-		this.segmented = kmeans_helper(originalImage, k);
-	}
-	
-	private static BufferedImage kmeans_helper(BufferedImage originalImage, int k){
+//    public static void main(String [] args){
+////		if (args.length < 3){
+////		    System.out.println("Usage: Kmeans <input-image> <k> <output-image>");
+////		    return;
+////		}
+//		try{
+//		    BufferedImage originalImage = ImageIO.read(new File("images/cat.jpg"));
+//		    int k=Integer.parseInt("2");
+//		    BufferedImage kmeansJpg = kmeans_helper(originalImage,k);
+//		    ImageIO.write(kmeansJpg, "jpg", new File("catX.jpg")); 
+//		    
+//		}catch(IOException e){
+//		    System.out.println(e.getMessage());
+//		}	
+//    }
+    
+    public KMeans(BufferedImage originalImage, int k) {
+    
+    	this.output = kmeans_helper(originalImage, k);
+    	
+    }
+    
+    public static BufferedImage getOutput() {
+    	return output;
+    }
+    
+    private static BufferedImage kmeans_helper(BufferedImage originalImage, int k){
 		int w=originalImage.getWidth();
 		int h=originalImage.getHeight();
 		BufferedImage kmeansImage = new BufferedImage(w,h,originalImage.getType());
@@ -75,9 +73,9 @@ public class KMeans {
 		    }
 		}
 		return kmeansImage;
-	}
-	
-	// Your k-means code goes here
+    }
+
+    // Your k-means code goes here
     // Update the array rgb by assigning each entry in the rgb array to its cluster center
     private static void kmeans(int[] rgb, int k, int min, int max){
 
@@ -163,6 +161,6 @@ public class KMeans {
     	for(int i=0; i<rgb.length; i++){    		
     		rgb[i]=(int)means[curAssignments[i]][3]<<24|(int)means[curAssignments[i]][0]<<16 | (int)means[curAssignments[i]][2]<<8 | (int)means[curAssignments[i]][1]<<0;
     	}
-}
-	
+    }
+
 }

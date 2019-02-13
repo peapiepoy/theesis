@@ -1,7 +1,6 @@
 package segmentation;
 
 import java.awt.image.BufferedImage;
-import algorithms.clustering.SubtractiveClustering;
 
 import main.Entry;
 import algorithms.clustering.KMeans;
@@ -16,10 +15,9 @@ public class Clustering {
 	BufferedImage segmentedImage = null;
 	BufferedImage grayscaled = null;
 	
-	public SubtractiveClustering subtractiveClustering;
 	public KMeans kmeans;
 	
-	public final int kCluster = 4;
+	public final int kCluster = 2;
 	
 	public Clustering(BufferedImage img) {
 		this.img = img;
@@ -30,16 +28,14 @@ public class Clustering {
 		pcsImg = partialContrastStretching();
 //		pcsMatrixToString();
 //		subtractiveClustering = new SubtractiveClustering(pcsMatrix, kCluster);
-		kmeans = new KMeans(img, pcsMatrix, kCluster);
+		kmeans = new KMeans(img, kCluster);
 		
-		this.segmentedImage = KMeans.segmented;
-		this.segmentedImage = pcsImg;
+		this.segmentedImage = KMeans.getOutput();
+//		this.segmentedImage = pcsImg;
 		
 	}
 	
-	public void setImage(BufferedImage displayImage) {
-		this.segmentedImage = displayImage;
-	}
+	
 	
 	
 	public BufferedImage partialContrastStretching() {
@@ -95,7 +91,9 @@ public class Clustering {
 		}
 	}
 	
-	
+	public void setImage(BufferedImage displayImage) {
+		this.segmentedImage = displayImage;
+	}
 	public BufferedImage getSegmentedImage() {
 		return segmentedImage;
 	}
