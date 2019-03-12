@@ -23,20 +23,12 @@ public class Clustering {
 		this.img = img;
 		this.width = img.getWidth();
 		this.height = img.getHeight();
-																//		grayscaled = new BufferedImage(width, height, 
-																//			      BufferedImage.TYPE_BYTE_GRAY);
-		pcsImg = partialContrastStretching();
-//		pcsMatrixToString();
-//		subtractiveClustering = new SubtractiveClustering(pcsMatrix, kCluster);
+																
+		//	pcsImg = partialContrastStretching();		// no use annymore, no need for PCS
 		kmeans = new KMeans(img, kCluster);
 		
 		this.segmentedImage = KMeans.getOutput();
-//		this.segmentedImage = pcsImg;
-		
 	}
-	
-	
-	
 	
 	public BufferedImage partialContrastStretching() {
 		pcsImg =  new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);

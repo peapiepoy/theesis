@@ -13,6 +13,7 @@ public class DisplayThreePanel extends JPanel{
 	private BufferedImage img;
 	public ScaledImagePanel clustering, regionGrowing, spam; 
 	public boolean segmenting;
+	private final String one = "SPAM", two = "KMeans", three = "Region Growing";
 	
 	public DisplayThreePanel(boolean segmenting) {
 		setLayout(null);
@@ -27,7 +28,7 @@ public class DisplayThreePanel extends JPanel{
 		process.setBounds(400,650, 200,20);
 		add(process);
 		
-		spam = new ScaledImagePanel(20, 20, "SPA,");	
+		spam = new ScaledImagePanel(20, 20, "Split-and-Merge");	
 		clustering = new ScaledImagePanel(350, 222, "KMeans");
 		regionGrowing = new ScaledImagePanel(680, 424, "Region Growing");
 		

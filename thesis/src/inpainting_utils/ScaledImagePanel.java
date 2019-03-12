@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
@@ -11,19 +13,26 @@ public class ScaledImagePanel extends JPanel{
 	static final long serialVersionUID = 1L;
 	private BufferedImage displayImg = null;
 	private int x, y;
-	private String label;
-	private final String one = "SPAM", two = "KMeans", three = "Region Growing";
-	public boolean segmenting = false;
+	private String str;
 	
-	public ScaledImagePanel(int x, int y, String label){
+	public boolean segmenting = false;
+	private JLabel label;
+	
+	public ScaledImagePanel(int x, int y, String str){
 		this.x = x;
-		this.y = y;
-		this.label = label;
+		this.y = y;    // wa lagi niy gamit 313
+		this.str = str;
+		label = new JLabel(str);
+		label.setBounds(0, 0, 200, 40);
+		this.add(label);
 		setBounds(x, 50, 300, 580);
+		
+		
 	}
 	public void setDisplayImg(BufferedImage displayImg) {
 		this.displayImg = displayImg;
-		this.displayImg = scaleImage(displayImg, 300, 660);
+		this.displayImg = scaleImage(displayImg, 300, 660);		// so nagset tlga ngayan ak hn size
+		
 		repaint();  
 	}
 	
@@ -63,7 +72,7 @@ public class ScaledImagePanel extends JPanel{
 	        return newImage;
 	    }
 	
-	public void paint(Graphics g) {
-		g.drawImage(displayImg, 0, 0, this);
+	public void paintComponent(Graphics g) {
+		g.drawImage(displayImg, 0, 50, this);
 	}
 }
