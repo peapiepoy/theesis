@@ -1,5 +1,7 @@
 package algorithms.spam;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -9,12 +11,42 @@ import java.util.Set;
 
 
 public class SplitAndMerge {
-
+		
     private FeatureMatrix image;
+    private ImageMatrix imageMatrix;
 
-    private double splitStandardDeviation = 5;
-    private double mergeStandardDeviation = 20;
-    private int minSize = 3;
+    private double splitStandardDeviation;
+    private double mergeStandardDeviation;
+    private int minSize;
+    private FeatureMatrix featureMatrix;
+    
+    public SplitAndMerge(BufferedImage image) {
+    	this.splitStandardDeviation = 5;
+    	this.mergeStandardDeviation = 20;
+    	this.minSize = 3;
+    	
+    	this.imageMatrix = new ImageMatrix(image);
+        //SplitAndMerge splitAndMergeAlgorithm = new SplitAndMerge();
+    	this.featureMatrix = new FeatureMatrix(imageMatrix.getWidth(), imageMatrix.getHeight(), 3);
+        
+        for (int i=0; i<imageMatrix.getHeight(); i++) {
+            for (int j=0; j<imageMatrix.getWidth(); j++) {
+                Color c = new Color(imageMatrix.getPixels()[i][j]);
+                this.featureMatrix.getData()[i][j][0] = c.getRed();
+                this.featureMatrix.getData()[i][j][1] = c.getGreen();
+                this.featureMatrix.getData()[i][j][2] = c.getBlue();
+            }
+        }
+        this.setImage(featureMatrix);
+        this.run();
+   //     createFrame(featureMatrix.getImageMatrix().getBufferedImage());
+    
+    	
+	}
+    
+    public BufferedImage getOutput() {
+    	return this.featureMatrix.getImageMatrix().getBufferedImage();
+    }
 
     public void run() {
         Set<ImageZone> zones = new HashSet<>();
@@ -310,7 +342,7 @@ public class SplitAndMerge {
 
             if (x_to <= x_from || y_to <= y_from) {
                 throw new RuntimeException(
-                        "Не может быть области размером менее 1 пикселя.");
+                        "Не может быть области размером менее 1 пикселя.");   //Cannot be an area smaller than 1 pixel.
             }
 
             this.xFrom = x_from;

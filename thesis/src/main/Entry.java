@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 
 import inpainting_utils.TargetAreaSelection;
 import segmentation.Clustering;
-import segmentation.SplitAndMerge;
+import segmentation.SpAM;
 import algorithms.inpainting.ImageInpainting;
 import view.TargetSelection;
 import view.DisplayThreePanel;
@@ -31,7 +31,7 @@ public class Entry {
 	public int[][] pixelmap, maskedmap;
 	public int maxTH, minTH;
 	// segmentation Split and Merge
-	private SplitAndMerge spam;
+	private SpAM spam;
 	public Clustering clustering;
 	public ImageInpainting imageInpainting;
 	public int[] maskColor = {100, 0, 255, 0, 0};
@@ -48,7 +48,7 @@ public class Entry {
  *  calls each segmentation process	
  */
 	public void segmentationProcess() {
-		this.spam = new SplitAndMerge(img);
+		this.spam = new SpAM(img);
 		this.clustering = new Clustering(img);
 		
 		this.segmenting.spam.setDisplayImg(this.spam.getSegmentedImage());
