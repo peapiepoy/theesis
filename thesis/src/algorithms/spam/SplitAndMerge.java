@@ -22,7 +22,7 @@ public class SplitAndMerge {
     
     public SplitAndMerge(BufferedImage image) {
     	this.splitStandardDeviation = 5;
-    	this.mergeStandardDeviation = 20;
+    	this.mergeStandardDeviation = 40;
     	this.minSize = 3;
     	
     	this.imageMatrix = new ImageMatrix(image);

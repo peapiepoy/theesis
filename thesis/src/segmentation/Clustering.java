@@ -17,7 +17,7 @@ public class Clustering {
 	
 	public KMeans kmeans;
 	
-	public final int kCluster = 2;
+	public final int kCluster = 4;
 	
 	public Clustering(BufferedImage img) {
 		this.img = img;
