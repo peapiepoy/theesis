@@ -91,12 +91,9 @@ public class ButtonHandler implements ActionListener{
 			Entry.getInstance().getTargetAreaSelection().enableSelection(true);
 		}
 		else if(e.getSource() == TargetSelection.getInstance().submit) {
-			Entry.getInstance().setPolygon(); //saves polygon in the Entry class
-			Entry.getInstance().imageMasking();
-			Entry.getInstance().inpainting.setImage();
-			Entry.getInstance().inpainting.displaySegmentationBoxes();
-			Entry.getInstance().inpaintingProcess();
+			Entry.getInstance().submitTargetRegion();
 			Main.getInstance().nextCard(); // next page
+			
 		}
 
 	}

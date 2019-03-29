@@ -206,6 +206,17 @@ public class Entry {
 		return masked;
 	}
 	
+	public void submitTargetRegion() {
+		setPolygon(); //saves polygon in the Entry class
+		imageMasking();
+		this.inpainting.setImage();
+		this.inpainting.displaySegmentationBoxes();
+		this.inpaintingProcess();
+		
+		
+		
+	}
+	
 	public static Entry getInstance() {
 		if(instance == null)
 			instance = new Entry();

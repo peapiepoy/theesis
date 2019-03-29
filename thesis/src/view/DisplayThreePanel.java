@@ -7,6 +7,11 @@ import javax.swing.JPanel;
 import main.Entry;
 import inpainting_utils.ScaledImagePanel;
 
+
+/*
+ * 
+ * 
+ */
 public class DisplayThreePanel extends JPanel{
 	public static DisplayThreePanel instance;
 	public JButton process, next;
