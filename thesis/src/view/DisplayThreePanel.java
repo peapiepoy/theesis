@@ -4,6 +4,10 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
+
 import main.Entry;
 import inpainting_utils.ScaledImagePanel;
 
@@ -15,10 +19,11 @@ import inpainting_utils.ScaledImagePanel;
 public class DisplayThreePanel extends JPanel{
 	public static DisplayThreePanel instance;
 	public JButton process, next;
+	private JSpinner kspinner;
 	private BufferedImage img;
 	public ScaledImagePanel clustering, regionGrowing, spam; 
 	public boolean segmenting;
-	private final String one = "SPAM", two = "KMeans", three = "Region Growing";
+	//private final String one = "SPAM", two = "KMeans", three = "Region Growing";
 	
 	public DisplayThreePanel(boolean segmenting) {
 		setLayout(null);
@@ -36,6 +41,11 @@ public class DisplayThreePanel extends JPanel{
 		spam = new ScaledImagePanel(20, 20, "Split-and-Merge");	
 		clustering = new ScaledImagePanel(350, 222, "KMeans");
 		regionGrowing = new ScaledImagePanel(680, 424, "Region Growing");
+		
+		SpinnerNumberModel snm = new SpinnerNumberModel(3, 1, 10, 1);
+		kspinner = new JSpinner(snm);
+		kspinner.setBounds(400, 500, 100, 30);
+		add(kspinner);
 		
 		add(spam);
 		add(clustering);
