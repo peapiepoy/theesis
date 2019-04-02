@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 public class ImageInpainting {
+	
 	public int[][] pixelmap, maskedmap;
 	private int[][] confidence, dataTerm, convolved;
 	private int row, col;
