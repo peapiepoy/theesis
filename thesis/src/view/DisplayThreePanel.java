@@ -58,6 +58,7 @@ public class DisplayThreePanel extends JPanel{
 		
 		this.process.setEnabled(false);
 		this.process.setVisible(false);
+			
 	}
 	
 	public void setImage() {

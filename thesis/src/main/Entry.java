@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 import inpainting_utils.TargetAreaSelection;
 import segmentation.Clustering;
 import segmentation.SpAM;
-import algorithms.inpainting.ImageInpainting;
+import algorithms.inpainting.ImageInpaint;
 import view.TargetSelection;
 import view.DisplayThreePanel;
 import controller.MouseHandler;
@@ -26,21 +26,21 @@ public class Entry {
 	private BufferedImage img, grayscaled, masked;
 	private Image oImg;
 	private TargetAreaSelection targetArea;
-	public DisplayThreePanel segmenting, inpainting;
+	public DisplayThreePanel segmenting, inpainting_panels;
 	private Polygon targetRegion;
 	public int[][] pixelmap, maskedmap;
 	public int maxTH, minTH;
 	// segmentation Split and Merge
 	private SpAM spam;
 	public Clustering clustering;
-	public ImageInpainting imageInpainting;
+	public ImageInpaint imageInpainting;
 	public int[] maskColor = {100, 0, 255, 0, 0};
 	
 	// segmentation RegionGrowing
 	
 	Entry(){
 		this.segmenting = new DisplayThreePanel(true);
-		this.inpainting = new DisplayThreePanel(false);
+		this.inpainting_panels = new DisplayThreePanel(false);
 		
 	}
 	
@@ -60,11 +60,9 @@ public class Entry {
  * 	when inpainting button is clicked	
  */
 	public void inpaintingProcess() {
-		this.inpainting.process.setText("Inpainting Process");
-		this.inpainting.spam.setDisplayImg(masked);
-		this.inpainting.clustering.setDisplayImg(masked);
 		
-		this.imageInpainting = new ImageInpainting(pixelmap, maskedmap);
+		
+		this.imageInpainting = new ImageInpaint(pixelmap, maskedmap); //is this true???? 4 26
 	}
 	
 /*
@@ -183,6 +181,10 @@ public class Entry {
 		return grayscaled;
 	}
 	
+	/*
+	 * returns image with colored TARGET REGION
+	 */
+	
 	public BufferedImage imageMasking() {
 		this.masked = new BufferedImage(pixelmap[0].length, pixelmap.length, BufferedImage.TYPE_INT_ARGB);
 		this.maskedmap = new int[pixelmap.length][pixelmap[0].length];
@@ -209,11 +211,14 @@ public class Entry {
 	public void submitTargetRegion() {
 		setPolygon(); //saves polygon in the Entry class
 		imageMasking();
-		this.inpainting.setImage();
-		this.inpainting.displaySegmentationBoxes();
-		this.inpaintingProcess();
+		this.inpainting_panels.setImage();
+		this.inpainting_panels.displaySegmentationBoxes();
 		
 		
+		// display the selected target region to the DisplayThreePanels
+		this.inpainting_panels.process.setText("Inpainting Process");
+		this.inpainting_panels.spam.setDisplayImg(masked);
+		this.inpainting_panels.clustering.setDisplayImg(masked);
 		
 	}
 	

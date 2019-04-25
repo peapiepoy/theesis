@@ -83,10 +83,20 @@ public class ImageInpaint {
 	 * @param inpaint
 	 *            Flag to specify whether quick painting is enabled or not
 	 */
-	public ImageInpaint() {
+	public ImageInpaint(BufferedImage oImg, BufferedImage maskedImage) {
 		this.omega = 0.7;
 		this.Alpha = 0.2;
 		this.Beta = 0.8;
+		// transform oImg to int[][] orig_pixel
+		// transform oImg to int[][] masked_pixel
+	}
+	
+	public ImageInpaint(int[][] orig_pixel, int[][] masked_pixel) {
+		
+		this.omega = 0.7;
+		this.Alpha = 0.2;
+		this.Beta = 0.8;
+		initialize(orig_pixel, masked_pixel, true);
 	}
 	
 	@SuppressWarnings("unchecked")

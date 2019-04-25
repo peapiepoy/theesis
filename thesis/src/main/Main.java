@@ -33,7 +33,7 @@ public class Main extends JFrame {
 		fpp = FirstPagePanel.getInstance();
 		sp = this.entry.segmenting;
 		ts = TargetSelection.getInstance();
-		ip = this.entry.inpainting;
+		ip = this.entry.inpainting_panels;
 		
 		bh = ButtonHandler.getInstance();
 		

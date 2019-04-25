@@ -26,8 +26,8 @@ public class ButtonHandler implements ActionListener{
 		
 		Entry.getInstance().segmenting.process.addActionListener(this);
 		Entry.getInstance().segmenting.next.addActionListener(this);
-		Entry.getInstance().inpainting.process.addActionListener(this);
-		Entry.getInstance().inpainting.next.addActionListener(this);
+		Entry.getInstance().inpainting_panels.process.addActionListener(this);
+		Entry.getInstance().inpainting_panels.next.addActionListener(this);
 	}
 
 	@Override
@@ -70,10 +70,12 @@ public class ButtonHandler implements ActionListener{
 			Main.getInstance().nextCard();
 		}
 		
-		else if(e.getSource() == Entry.getInstance().inpainting.process) {
-			Entry.getInstance().inpainting.flipButtons();
+		else if(e.getSource() == Entry.getInstance().inpainting_panels.process) {
+			Entry.getInstance().inpainting_panels.flipButtons();
+			Entry.getInstance().inpaintingProcess();
+			
 		}
-		else if(e.getSource() == Entry.getInstance().inpainting.next) {
+		else if(e.getSource() == Entry.getInstance().inpainting_panels.next) {
 			System.out.println("dead end yet");
 		}
 		
