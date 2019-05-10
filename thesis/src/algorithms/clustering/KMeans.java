@@ -11,48 +11,38 @@ import java.util.Random;
  
 public class KMeans {
 	
-	public static BufferedImage output = null;
+	public BufferedImage kmeansImage = null;
 	
-//    public static void main(String [] args){
-////		if (args.length < 3){
-////		    System.out.println("Usage: Kmeans <input-image> <k> <output-image>");
-////		    return;
-////		}
-//		try{
-//		    BufferedImage originalImage = ImageIO.read(new File("images/cat.jpg"));
-//		    int k=Integer.parseInt("2");
-//		    BufferedImage kmeansJpg = kmeans_helper(originalImage,k);
-//		    ImageIO.write(kmeansJpg, "jpg", new File("catX.jpg")); 
-//		    
-//		}catch(IOException e){
-//		    System.out.println(e.getMessage());
-//		}	
-//    }
     
     public KMeans(BufferedImage originalImage, int k) {
     
-    	this.output = kmeans_helper(originalImage, k);
+    	this.kmeansImage = kmeans_helper(originalImage, k);
     	
     }
     
-    public static BufferedImage getOutput() {
-    	return output;
+    public BufferedImage getOutput() {
+    	return this.kmeansImage;
     }
     
-    private static BufferedImage kmeans_helper(BufferedImage originalImage, int k){
+    private BufferedImage kmeans_helper(BufferedImage originalImage, int k){
 		int w=originalImage.getWidth();
 		int h=originalImage.getHeight();
-		BufferedImage kmeansImage = new BufferedImage(w,h,originalImage.getType());
+		this.kmeansImage = new BufferedImage(w,h,originalImage.getType());
+		
+		
 		Graphics2D g = kmeansImage.createGraphics();
-		g.drawImage(originalImage, 0, 0, w,h , null);
+		g.drawImage(originalImage, 0, 0, w,h , null);					// changed from originalImage -> kmeansImage to see if it did copy 5319
+																	// kita ang katag! pero ngano diayng padrowing nako ari nga wa pa may clustering nahimo?
+		
 		// Read rgb values from the image
 		int[] rgb=new int[w*h];
 		int count=0;
 		int min = Integer.MAX_VALUE;
 		int max = Integer.MIN_VALUE;
+		
 		for(int i=0;i<w;i++){
 		    for(int j=0;j<h;j++){
-				int rgbVal = kmeansImage.getRGB(i,j);			
+				int rgbVal = this.kmeansImage.getRGB(i,j);			
 				rgb[count++] = rgbVal;
 				if (rgbVal < min){
 					min = rgbVal;
@@ -69,10 +59,11 @@ public class KMeans {
 		count=0;
 		for(int i=0;i<w;i++){
 		    for(int j=0;j<h;j++){
-			kmeansImage.setRGB(i,j,rgb[count++]);
+			this.kmeansImage.setRGB(i,j,rgb[count++]);
 		    }
 		}
-		return kmeansImage;
+		//g.drawImage(kmeansImage, 0, 0, w,h , null);					
+		return this.kmeansImage;
     }
 
     // Your k-means code goes here

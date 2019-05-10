@@ -29,6 +29,9 @@ public class ScaledImagePanel extends JPanel{
 		
 		
 	}
+	/*
+	 * initial display only, segmented display is in Entri.java
+	 */
 	public void setDisplayImg(BufferedImage displayImg) {
 		this.displayImg = displayImg;
 		this.displayImg = scaleImage(displayImg, 300, 660);		// so nagset tlga ngayan ak hn size

@@ -28,7 +28,7 @@ public class GradientCalculator {
 	private int[][] pixelmap;	
 	
 	public GradientCalculator() {
-		this.pixelmap = Entry.getInstance().pixelmap;
+		this.pixelmap = Entry.getInstance().original_pixel;
 	}
 	
 	/**

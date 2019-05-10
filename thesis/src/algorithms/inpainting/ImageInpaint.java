@@ -21,6 +21,8 @@ import java.awt.image.PixelGrabber;
 import java.awt.image.WritableRaster;
 import java.util.Vector;
 
+import main.Entry;
+
 /**
  * Class to Inpaint the given Image. Call Function init with original image, fillImage and quickPaint as arguments
  * 
@@ -61,17 +63,8 @@ public class ImageInpaint {
 	private int pixelPosY; // The Y-coordinate of current pixel being processed
 	int w = 3; // Patch size is 2*w + 1
 	double con[][] = new double[][] { { 1, 1, 1 }, { 1, -8, 1 }, { 1, 1, 1 } }; // Laplacian filter used in founding
-																				// boundary of target region
+	int []maskedColor = new int[5];
 
-	/**
-	 * Constructor for the ImageInpaint Class
-	 * 
-	 * @param owner
-	 *            Object to the Main class representing the owner of ImageInpaint object.
-	 */
-//	public ImageInpaint(Main owner) {
-//		this.owner = owner;
-//	}
 
 	/**
 	 * Function to inpaint the given image.
@@ -87,8 +80,6 @@ public class ImageInpaint {
 		this.omega = 0.7;
 		this.Alpha = 0.2;
 		this.Beta = 0.8;
-		// transform oImg to int[][] orig_pixel
-		// transform oImg to int[][] masked_pixel
 	}
 	
 	public ImageInpaint(int[][] orig_pixel, int[][] masked_pixel) {
@@ -96,11 +87,39 @@ public class ImageInpaint {
 		this.omega = 0.7;
 		this.Alpha = 0.2;
 		this.Beta = 0.8;
+		maskedColor = Entry.getInstance().maskColor;
+		
+		this.pixelmap = orig_pixel;
+		this.fillPixelmap = masked_pixel;
+		
+		System.out.println("ImageInpaint Constructor...");
+		System.out.println("\t"+orig_pixel[0].length+" x "+masked_pixel.length);
+		System.out.println("maskedColor: "+maskedColor[0]+" "+maskedColor[1]+" "+maskedColor[2]);
+		
+		printPixels(orig_pixel, masked_pixel, 100);
+		
 		initialize(orig_pixel, masked_pixel, true);
 	}
 	
+	public void printPixels(int[][] og, int[][] masked, int sq) {
+		System.out.println("\tprinting pixels\nOriginal");
+		for(int y=0; y<sq; y++) {
+			for(int x=0; x<sq; x++) {
+				System.out.print(og[x][y]+"");
+			}
+			System.out.println();
+		}
+		System.out.println("\n\nwith Target Region");
+		for(int y=0; y<sq; y++) {
+			for(int x=0; x<sq; x++) {
+				System.out.print(masked[x][y]+"");
+			}
+			System.out.println();
+		}
+		
+	}
+	
 	@SuppressWarnings("unchecked")
-	//public void inits(BufferedImage a_origImg, BufferedImage a_fillImg, Boolean quickInpaint) {
 	public void initialize(int[][] orig_pixel, int[][] masked_pixel, boolean inpaint) {
 	
 		halt = false;
@@ -137,14 +156,16 @@ public class ImageInpaint {
 		for (i = 0; i < ih; i++) {
 			countrow = 0;
 			for (j = 0; j < iw; j++) {
-				pixel = masked_pixel[i][j];
+				
+				pixel = fillPixelmap[i][j];
 				r = 0xff & pixel >> 16; // Obtain the red Component
 				g = 0xff & pixel >> 8; // Obtain the green Component
 				b = 0xff & pixel; // Obtain the blue Component
+				
 				/**
-				 * If the color is green, mark it as fillRegion Otherwise mark it as SourceRegion.
+				 * If the color is masked color set in entry.java(green), mark it as fillRegion Otherwise mark it as SourceRegion.
 				 */
-				if (r == 0 && g == 255 && b == 0) {
+				if (r == maskedColor[0] && g == maskedColor[1] && b == maskedColor[2]) {
 					countrow++; // Increase the number of continuous green pixels
 					fillRegion[i][j] = 1;
 					sourceRegion[i][j] = 0;
@@ -159,7 +180,7 @@ public class ImageInpaint {
 						maxX = j;
 					}
 					if (i > maxY) {
-						maxY = i;
+							maxY = i;
 					}
 				} else {
 					if (countrow > continuousRow) {
@@ -183,7 +204,7 @@ public class ImageInpaint {
 				/**
 				 * If pixel is green, increase the countcol by 1.
 				 */
-				if (r == 0 && g == 255 && b == 0) {
+				if (r == maskedColor[0] && g == maskedColor[1] && b == maskedColor[2]) {
 					countcol++; // Increase the number of continuous green pixels
 				} else {
 					if (countcol > continuousCol) {
@@ -193,9 +214,6 @@ public class ImageInpaint {
 				}
 			}
 		}
-
-		// System.out.println("Col = " + continuousCol);
-		// System.out.println("Col = " + continuousRow);
 
 		Boolean flag = true; // Flag to represent the completion of the inpainting process
 
@@ -251,7 +269,8 @@ public class ImageInpaint {
 			 * Now calculate Confidence Terms for all the pixels in the boundary of target region.
 			 */
 			for (i = 0; i < dR.size(); i++) {
-				int[][] Hp = getpatch(pixelmap, (Integer) dR.get(i));
+				int[][] Hp = getpatch(fillPixelmap, (Integer) dR.get(i));				// 5119 will use fillPixelmap instead bc pixelmap is the original image
+																			// but prolly it's just fine bc we wont use the values of pixelmap
 				for (j = 0; j < Hp.length; j++) {
 					for (int k = 0; k < Hp[0].length; k++) {
 						int col = Hp[j][k] / ih;
@@ -311,7 +330,7 @@ public class ImageInpaint {
 			 * @toFill: Represents which pixels (from the patch) are to be filled
 			 * @toFillTrans: Transpose of ToFill matrix
 			 */
-			int[][] Hp = getpatch(pixelmap, (Integer) dR.get(maxPriorityIndex));
+			int[][] Hp = getpatch(fillPixelmap, (Integer) dR.get(maxPriorityIndex));		// changing pixelmap->fillPixelmap 5219
 			double[][] toFill = new double[Hp.length][Hp[0].length];
 			double[][] toFillTrans = new double[Hp[0].length][Hp.length];
 
@@ -388,11 +407,11 @@ public class ImageInpaint {
 				}
 			}
 
-			if (halt) {
-				break;
-			}
+//			if (halt) {																			// removed
+//				break;
+//			}
 //			owner.updateStats(origImg); // Inform the owner about the updated image.
-			Thread.yield();
+//			Thread.yield();   																	// removed
 
 			/**
 			 * Find whether any other pixels are remaining to be inpainted.
@@ -419,32 +438,41 @@ public class ImageInpaint {
 		 * removed.
 		 */
 		gc = null;
-		if (!halt) {
-			completed = true;
-		} else {
-			completed = false;
-		}
-//		owner.updateStats(origImg); // Inform the owner about the updates.
-		Thread.yield();
+//		if (!halt) {																// removed downwards i dont understand
+//			completed = true;
+//		} else {
+//			completed = false;
+//		}
+////		owner.updateStats(origImg); // Inform the owner about the updates.
+//		Thread.yield();
 	}
+	
 
 	/**
 	 * Initializes the confidence term to zero for pixels in target region and 1 for pixels in source region.
 	 */
 	void initialize_confidence_term() {
+		System.out.println("initializing confidence term...");
+		
 		confidence = new double[ih][iw];
+		
 		for (int i = 0; i < ih; i++) {
 			for (int j = 0; j < iw; j++) {
-				int p = pixelmap[i][j];
+				
+				int p = fillPixelmap[i][j];				// pixelmap -> fillPixelmap
 				int r = 0xff & p >> 16;
 				int g = 0xff & p >> 8;
 				int b = 0xff & p;
-				if (r == 0 && g == 255 && b == 0) {
+				
+				if (r == maskedColor[0] && g == maskedColor[1] && b == maskedColor[2]) {				// get masked color to set to this comparison and now im tired
 					confidence[i][j] = 0;
 				} else {
 					confidence[i][j] = 1;
 				}
+				int cfd = (int)confidence[i][j];
+				System.out.print(cfd+"");
 			}
+			System.out.println(" "+i);
 		}
 	}
 
@@ -601,7 +629,7 @@ public class ImageInpaint {
 			for (int j = 0; j < toFill.length; j++) {
 				int col = Hp[i][j] / ih;
 				int row = Hp[i][j] % ih;
-				Ip[j][i] = pixelmap[row][col]; // transpose
+				Ip[j][i] = fillPixelmap[row][col]; // transpose			// r we still gonna copy from pixelmap??? pixelmap->fillPixelmap
 			}
 		}
 

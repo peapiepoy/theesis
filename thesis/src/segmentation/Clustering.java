@@ -1,5 +1,6 @@
 package segmentation;
 
+import algorithms.clustering.ImageProcessing;
 import java.awt.image.BufferedImage;
 
 import main.Entry;
@@ -16,24 +17,28 @@ public class Clustering {
 	BufferedImage grayscaled = null;
 	
 	public KMeans kmeans;
+	ImageProcessing ip;
 	
-	public final int kCluster = 4;
+	public final int kCluster = 2;
 	
 	public Clustering(BufferedImage img) {
 		this.img = img;
 		this.width = img.getWidth();
 		this.height = img.getHeight();
-																
+						
+		ip = new ImageProcessing(img, kCluster);
 		//	pcsImg = partialContrastStretching();		// no use annymore, no need for PCS
-		kmeans = new KMeans(img, kCluster);
+		//this.kmeans = new KMeans(img, kCluster);
 		
-		this.segmentedImage = KMeans.getOutput();
+		//this.segmentedImage = KMeans.getOutput();			//will set segmentedimage on kmeans  
 	}
+	
+	
 	
 	public BufferedImage partialContrastStretching() {
 		pcsImg =  new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		pcsMatrix = new int[height][width];
-		int [][]pixelmap = Entry.getInstance().pixelmap;
+		int [][]pixelmap = Entry.getInstance().original_pixel;
 		int maxTH = Entry.getInstance().maxTH;
 		int minTH = Entry.getInstance().minTH;
 		int fmin, upperGap, fmax;
@@ -86,8 +91,11 @@ public class Clustering {
 	public void setImage(BufferedImage displayImage) {
 		this.segmentedImage = displayImage;
 	}
+	
 	public BufferedImage getSegmentedImage() {
-		return segmentedImage;
+//		return segmentedImage;
+//		return kmeans.getOutput();
+		return ip.getOutput();
 	}
 
 }

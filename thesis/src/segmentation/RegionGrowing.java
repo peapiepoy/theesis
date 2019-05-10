@@ -15,7 +15,7 @@ public class RegionGrowing {
 		grayscaled = new BufferedImage(width, height, 
 			      BufferedImage.TYPE_BYTE_GRAY);
 		
-		grayscaled = Entry.getInstance().grayscaling();
+		grayscaled = Entry.getInstance().grayscaling(Entry.getInstance().original_pixel);
 	}
 	
 	public void setImage(BufferedImage displayImage) {
