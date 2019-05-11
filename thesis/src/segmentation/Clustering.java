@@ -19,18 +19,24 @@ public class Clustering {
 	public KMeans kmeans;
 	ImageProcessing ip;
 	
-	public final int kCluster = 2;
+	public int kCluster;
 	
-	public Clustering(BufferedImage img) {
+	public Clustering(BufferedImage img, int k) {
 		this.img = img;
 		this.width = img.getWidth();
 		this.height = img.getHeight();
+		this.kCluster = k;
 						
-		ip = new ImageProcessing(img, kCluster);
+		ip = new ImageProcessing(img, kCluster);		// didnt use KMeans class kay hahaha
+		
 		//	pcsImg = partialContrastStretching();		// no use annymore, no need for PCS
 		//this.kmeans = new KMeans(img, kCluster);
 		
 		//this.segmentedImage = KMeans.getOutput();			//will set segmentedimage on kmeans  
+	}
+	
+	public void setkCluster(int k) {
+		this.kCluster = k;
 	}
 	
 	

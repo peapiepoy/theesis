@@ -11,11 +11,6 @@ import javax.swing.SpinnerNumberModel;
 import main.Entry;
 import inpainting_utils.ScaledImagePanel;
 
-
-/*
- * 
- * 
- */
 public class DisplayThreePanel extends JPanel{
 	public static DisplayThreePanel instance;
 	public JButton process, next;
@@ -44,7 +39,7 @@ public class DisplayThreePanel extends JPanel{
 		
 		SpinnerNumberModel snm = new SpinnerNumberModel(3, 1, 10, 1);
 		kspinner = new JSpinner(snm);
-		kspinner.setBounds(400, 500, 100, 30);
+		kspinner.setBounds(450, 450, 100, 30);
 		add(kspinner);
 		
 		add(spam);
@@ -72,6 +67,13 @@ public class DisplayThreePanel extends JPanel{
 		clustering.setDisplayImg(img);
 		regionGrowing.setDisplayImg(img);
 	}
+	
+	public int kspinnerValue() {
+		String ss =  kspinner.getValue().toString();
+		System.out.println("sssssssssssssssss: "+ss);
+		return Integer.parseInt(ss);
+	}
+	
 //	public static DisplayThreePanel getInstance() {
 //		if(instance==null)
 //			instance = new DisplayThreePanel();

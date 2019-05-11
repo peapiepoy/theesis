@@ -34,6 +34,7 @@ public class Entry {
 	private SpAM spam;
 	public Clustering clustering;
 	public ImageInpaint imageInpainting;
+	public int k;
 	public int[] maskColor = {255, 0, 0, 0, 0};
 	
 	// segmentation RegionGrowing
@@ -48,8 +49,10 @@ public class Entry {
  *  calls each segmentation process and display the output on DisplayThreePanels	
  */
 	public void segmentationProcess() {
+		this.k = this.segmenting.kspinnerValue();
+		
 		this.spam = new SpAM(img);
-		this.clustering = new Clustering(img);
+		this.clustering = new Clustering(img, k);
 		
 		this.segmenting.spam.setDisplayImg(this.spam.getSegmentedImage());
 		this.segmenting.clustering.setDisplayImg(this.clustering.getSegmentedImage());
