@@ -9,9 +9,12 @@ import algorithms.spam.SplitAndMerge;
 public class SpAM {
 	public BufferedImage img, grayscaled, segmentedImage;
 	
-	public SpAM(BufferedImage img) {
+	public SpAM(BufferedImage img, int ssd, int msd, int ms) {
 		this.img = img;
-		SplitAndMerge spam = new SplitAndMerge(this.img);
+		
+		
+		
+		SplitAndMerge spam = new SplitAndMerge(this.img, ssd, msd, ms);
 		
 		setImage(spam.getOutput());
 		

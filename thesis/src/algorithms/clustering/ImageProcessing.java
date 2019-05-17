@@ -43,7 +43,7 @@ public class ImageProcessing {
 				green = c.getGreen();
 				blue = c.getBlue();
 				imageMatrix1[x][y] = new Color(red,green,blue);
-				c1 = new Color(0,0,0); //na pocz¹tku obraz jest wype³niany na czarno
+				c1 = new Color(0,0,0); //na poczï¿½tku obraz jest wypeï¿½niany na czarno
 				this.image.setRGB(x, y, c1.getRGB());
 			}
 		}
@@ -70,21 +70,21 @@ public class ImageProcessing {
 		boolean centerChange[] = new boolean[clusterCount];
 		Random random = new Random();
 		//for(int i=1;i<=clusterCount;i++) center[i-1] = new Cluster(new Pixel(255/clusterCount*(i)));
-		for(int i=0;i<clusterCount;i++) center[i] = new Cluster(new Pixel(random.nextInt(256),random.nextInt(256),random.nextInt(256))); //losujê wartoœci centroidów w skali szaroœci
+		for(int i=0;i<clusterCount;i++) center[i] = new Cluster(new Pixel(random.nextInt(256),random.nextInt(256),random.nextInt(256))); //losujï¿½ wartoï¿½ci centroidï¿½w w skali szaroï¿½ci
 
 		while(globalChange){
-			for(int i=0;i<clusterCount;i++){ //resetujê tablice pikseli przynale¿¹cych do centroidów
+			for(int i=0;i<clusterCount;i++){ //resetujï¿½ tablice pikseli przynaleï¿½ï¿½cych do centroidï¿½w
 				System.out.println(center[i].getCentroidColor()+" getCentroidColor()");
 				center[i].clusterArray = new ArrayList<Pixel>();
 			}
 			System.out.println("");
 			for(int y=0;y<height;y++){
 				for(int x=0;x<width;x++){
-					int minDist =255; //minimalny dystans piksela do najbli¿szego centroidu
-					int nearestCenter=0; //liczba reprezentuj¹ca najbli¿szy centroid
+					int minDist =255; //minimalny dystans piksela do najbliï¿½szego centroidu
+					int nearestCenter=0; //liczba reprezentujï¿½ca najbliï¿½szy centroid
 					for(int i=0;i<clusterCount;i++){
 						int dist = Math.abs(colorToGray(imageMatrix1[x][y]) - center[i].getCentroidGray()); //obliczam dystans od itego centroidu
-						if(minDist>dist){ //porównuje obliczon¹ odleg³oœæ z minimaln¹ dotychczasow¹
+						if(minDist>dist){ //porï¿½wnuje obliczonï¿½ odlegï¿½oï¿½ï¿½ z minimalnï¿½ dotychczasowï¿½
 							minDist = dist;
 							nearestCenter = i;
 						}

@@ -34,7 +34,7 @@ public class Entry {
 	private SpAM spam;
 	public Clustering clustering;
 	public ImageInpaint imageInpainting;
-	public int k;
+	public int k_clustering, msd_spam, ssd_spam, ms_spam;
 	public int[] maskColor = {255, 16, 245, 238, 0}; //argb	a=transparency
 	
 	// segmentation RegionGrowing
@@ -79,10 +79,13 @@ public class Entry {
  *  calls each segmentation process and display the output on DisplayThreePanels	
  */
 	public void segmentationProcess() {
-		this.k = this.segmenting.kspinnerValue();
+		this.k_clustering = this.segmenting.kSpinnerValue();
+		this.msd_spam = this.segmenting.msdSpinnerValue();
+		this.ssd_spam = this.segmenting.ssdSpinnerValue();
+		this.ms_spam = this.segmenting.msSpinnerValue();
 		
-		this.spam = new SpAM(img);
-		this.clustering = new Clustering(img, k);
+		this.spam = new SpAM(img, ssd_spam, msd_spam, ms_spam);
+		this.clustering = new Clustering(img, k_clustering);
 		
 		this.segmenting.spam.setDisplayImg(this.spam.getSegmentedImage());
 		this.segmenting.clustering.setDisplayImg(this.clustering.getSegmentedImage());

@@ -20,10 +20,14 @@ public class SplitAndMerge {
     private int minSize;
     private FeatureMatrix featureMatrix;
     
-    public SplitAndMerge(BufferedImage image) {
-    	this.splitStandardDeviation = 5;
-    	this.mergeStandardDeviation = 40;
-    	this.minSize = 3;
+    public SplitAndMerge(BufferedImage image, int ssd, int msd, int ms) {
+//    	this.splitStandardDeviation = 5;
+//    	this.mergeStandardDeviation = 40;
+//    	this.minSize = 3;
+    	
+    	this.splitStandardDeviation = ssd;
+    	this.mergeStandardDeviation = msd;
+    	this.minSize = ms;
     	
     	this.imageMatrix = new ImageMatrix(image);
         //SplitAndMerge splitAndMergeAlgorithm = new SplitAndMerge();

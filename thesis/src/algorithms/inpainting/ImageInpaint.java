@@ -15,6 +15,7 @@
 package algorithms.inpainting;
 
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
@@ -87,18 +88,22 @@ public class ImageInpaint {
 //		this.pixelmap = orig_pixel;
 //		this.fillPixelmap = masked_pixel;
 		
-		this.pixelmap = Entry.getInstance().original_pixel;
-		this.fillPixelmap = Entry.getInstance().masked_pixel;
-		this.biMaskedMap = Entry.getInstance().masked_binary;
+//		this.pixelmap = Entry.getInstance().original_pixel;
+//		this.fillPixelmap = Entry.getInstance().masked_pixel;
+//		this.biMaskedMap = Entry.getInstance().masked_binary;
 																// problems: pixelsRECEIVED
 		
 //		printPixels(orig_pixel, 100);
 //		printPixels(masked_pixel, 100);
 		
-		int [][]orig_pixel = Entry.getInstance().toPixelArray(oImg);			// sa Entry ko 'to kinuha, dun ko din ipaprocess xD
-		int [][]masked_pixel = Entry.getInstance().toPixelArray(maskedImg);
+//		int [][]orig_pixel = Entry.getInstance().toPixelArray(oImg);			// sa Entry ko 'to kinuha, dun ko din ipaprocess xD
+//		int [][]masked_pixel = Entry.getInstance().toPixelArray(maskedImg);
 		
-		initialize(orig_pixel, masked_pixel, true);
+//		initialize(orig_pixel, masked_pixel, true);
+		this.ih = oImg.getHeight();
+		this.iw= oImg.getWidth();
+		
+		process(oImg, maskedImg, true);
 		
 	}
 	
@@ -106,11 +111,9 @@ public class ImageInpaint {
 		this.omega = 0.7;
 		this.Alpha = 0.2;
 		this.Beta = 0.8;
+		
+		
 	}
-	
-//	public int[][] extractPixels(BufferedImage img){
-//		
-//	}
 	
 	public void printPixels(int[][] pixels, int sq) {
 		System.out.println("\tprinting pixels\nOg1 masked2");
@@ -122,20 +125,42 @@ public class ImageInpaint {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	public void initialize(int[][] orig_pixel, int[][] masked_pixel, boolean inpaint) {
-	
-		halt = false;
-		int i, j;
+	public int[][] grabPixels(BufferedImage img) {
 		
-		iw = orig_pixel[0].length;
-		ih = orig_pixel.length;
-
+		pixels = new int[iw * ih];
+		PixelGrabber pg  = new PixelGrabber(img, 0,0, iw, ih, pixels, 0, iw);
+		
+		try {
+			pg.grabPixels();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int [][]pixelmapx = new int[ih][iw];
+		
+		for (int i = 0; i < ih; i++) {
+			for (int j = 0; j < iw; j++) {
+				pixelmapx[i][j] = pixels[i * iw + j];
+			}
+		}
+		return pixelmapx;
+	
+	}
+	
+	@SuppressWarnings("unchecked")
+	//public void initialize(int[][] orig_pixel, int[][] masked_pixel, boolean inpaint) {
+	public void process(BufferedImage original, BufferedImage masked, boolean inpaint) {
+		halt = false;
+		int i,j;
+		
+		this.pixelmap = grabPixels(original);
+		this.fillPixelmap = grabPixels(masked);
+	
 		/**
 		 * Create instance of GradientCalculator to calculate gradients.
 		 */
 		gc = new GradientCalculator();
-		gc.calculateGradientFromImage(orig_pixel, ih, iw); // Calculate Perpendicular Gradient for original image.
+		gc.calculateGradientFromImage(pixelmap, ih, iw); // Calculate Perpendicular Gradient for original image.
 		gradientX = gc.gradientX;
 		gradientY = gc.gradientY;
 
@@ -157,7 +182,7 @@ public class ImageInpaint {
 
 		int pixel, r, g, b, countrow, countcol;
 		continuousRow = continuousCol = 0;
-		
+		int mcount = 0;
 		for (i = 0; i < ih; i++) {
 			countrow = 0;
 			for (j = 0; j < iw; j++) {
@@ -166,12 +191,14 @@ public class ImageInpaint {
 				r = 0xff & pixel >> 16; // Obtain the red Component
 				g = 0xff & pixel >> 8; // Obtain the green Component
 				b = 0xff & pixel; // Obtain the blue Component
-				
+				if(i<20)
+					System.out.println(r+","+g+","+b);
 				/**
 				 * If the color is masked color set in entry.java(green), mark it as fillRegion Otherwise mark it as SourceRegion.
 				 */
-				if (r == maskedColor[1] && g == maskedColor[2] && b == maskedColor[3] &&
-						biMaskedMap[i][j] < 0) {
+				if (r == maskedColor[1] && g == maskedColor[2] && b == maskedColor[3]) {
+					++mcount;
+					System.out.println("masked region "+mcount);
 					countrow++; // Increase the number of continuous green pixels
 					fillRegion[i][j] = 1;
 					sourceRegion[i][j] = 0;
@@ -212,8 +239,7 @@ public class ImageInpaint {
 				/**
 				 * If pixel is green, increase the countcol by 1.
 				 */
-				if (r == maskedColor[1] && g == maskedColor[2] && b == maskedColor[3] &&
-						biMaskedMap[i][j] < 0) {
+				if (r == maskedColor[1] && g == maskedColor[2] && b == maskedColor[3] ) {
 					countcol++; // Increase the number of continuous green pixels
 				} else {
 					if (countcol > continuousCol) {

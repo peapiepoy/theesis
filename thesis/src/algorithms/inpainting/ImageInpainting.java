@@ -55,12 +55,24 @@ public class ImageInpainting {
 
 
 	public void initializeData() {
+		/*
+		 * intialize GRADIENTS??
+		 */
+		gradientX = new double[row][col];
+		gradientY = new double[row][col];
+		normalizedXY = new double[row][col];
+		this.gc.calculateGradient(pixelmap, col, row);
+		
+		
 		for(int i=0; i < row; i++) {
 			for(int j=0; j < col; j++) {
+				
 				this.toFillRegion[j][i] = 0;
 				this.dataTerm[j][i] = -1;
 				int rgb[] = rgbValues(pixelmap[j][i]);
 				this.confidence[j][i] = 1;
+				
+				/* target region pixel */
 				if(maskColor[0] == rgb[0] && maskColor[1] == rgb[1] && maskColor[2] == rgb[2]) { 		// this pixel is a hole
 					this.confidence[j][i] = 0;
 					this.toFillRegion[j][i] = 1;
@@ -69,9 +81,6 @@ public class ImageInpainting {
 			}
 		}
 		
-		gradientX = new double[row][col];
-		gradientY = new double[row][col];
-		normalizedXY = new double[row][col];
 		
 	}
 	

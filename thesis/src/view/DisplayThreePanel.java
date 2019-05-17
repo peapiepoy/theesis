@@ -15,7 +15,7 @@ public class DisplayThreePanel extends JPanel{
 	
 	public static DisplayThreePanel instance;
 	public JButton process, next;
-	private JSpinner kspinner;
+	private JSpinner kspinner, ms, ssd, msd;
 	private BufferedImage image;
 	public ScaledImagePanel clustering, regionGrowing, spam; 
 	public boolean segmenting;
@@ -43,6 +43,21 @@ public class DisplayThreePanel extends JPanel{
 		kspinner.setBounds(450, 450, 100, 30);
 		add(kspinner);
 		
+		SpinnerNumberModel ssdx = new SpinnerNumberModel(5, 1, 10, 1);
+		ssd = new JSpinner(ssdx);
+		ssd.setBounds(70, 450, 100, 30);
+		add(ssd);
+		
+		SpinnerNumberModel msdx = new SpinnerNumberModel(40, 10, 100, 5);
+		msd = new JSpinner(msdx);
+		msd.setBounds(70, 490, 100, 30);
+		add(msd);
+		
+		SpinnerNumberModel msx = new SpinnerNumberModel(3, 1, 10, 1);
+		ms = new JSpinner(msx);
+		ms.setBounds(70, 530, 100, 30);
+		add(ms);
+		
 		add(spam);
 		add(clustering);
 		add(regionGrowing);
@@ -54,7 +69,6 @@ public class DisplayThreePanel extends JPanel{
 		
 		this.process.setEnabled(false);
 		this.process.setVisible(false);
-			
 	}
 	
 	public void setImage(BufferedImage img) {
@@ -69,9 +83,21 @@ public class DisplayThreePanel extends JPanel{
 		regionGrowing.setDisplayImg(image);
 	}
 	
-	public int kspinnerValue() {
+	public int kSpinnerValue() {
 		String ss =  kspinner.getValue().toString();
 		return Integer.parseInt(ss);
+	}
+	
+	public int msSpinnerValue() {
+		return Integer.parseInt(ms.getValue().toString());
+	}
+	
+	public int msdSpinnerValue() {
+		return Integer.parseInt(msd.getValue().toString());
+	}
+	
+	public int ssdSpinnerValue() {
+		return Integer.parseInt(ssd.getValue().toString());
 	}
 	
 }
