@@ -54,7 +54,7 @@ public class ButtonHandler implements ActionListener{
 			}
 			Main.getInstance().nextCard();
 			
-			Entry.getInstance().segmenting.setImage();
+			Entry.getInstance().segmenting.setImage(Entry.getInstance().getImage());
 			Entry.getInstance().segmenting.displaySegmentationBoxes(); // displays image for segmentation
 		}
 		
@@ -68,15 +68,6 @@ public class ButtonHandler implements ActionListener{
 		
 		else if(e.getSource() == Entry.getInstance().segmenting.next) {
 			Main.getInstance().nextCard();
-		}
-		
-		else if(e.getSource() == Entry.getInstance().inpainting_panels.process) {
-			Entry.getInstance().inpainting_panels.flipButtons();
-			Entry.getInstance().inpaintingProcess();
-			
-		}
-		else if(e.getSource() == Entry.getInstance().inpainting_panels.next) {
-			System.out.println("dead end yet");
 		}
 		
 /*
@@ -97,6 +88,19 @@ public class ButtonHandler implements ActionListener{
 			Main.getInstance().nextCard(); // next page
 			
 		}
+/*
+ * entry na pud		
+ */
+		else if(e.getSource() == Entry.getInstance().inpainting_panels.process) {
+			Entry.getInstance().inpainting_panels.flipButtons();
+			Entry.getInstance().inpaintingProcess();
+			
+		}
+		else if(e.getSource() == Entry.getInstance().inpainting_panels.next) {
+			System.out.println("dead end yet");
+		}
+		
+
 
 	}
 	

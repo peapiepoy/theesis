@@ -64,6 +64,7 @@ public class ImageInpaint {
 	int w = 3; // Patch size is 2*w + 1
 	double con[][] = new double[][] { { 1, 1, 1 }, { 1, -8, 1 }, { 1, 1, 1 } }; // Laplacian filter used in founding
 	int []maskedColor = new int[5];
+	int [][]biMaskedMap;
 
 
 	/**
@@ -76,47 +77,49 @@ public class ImageInpaint {
 	 * @param inpaint
 	 *            Flag to specify whether quick painting is enabled or not
 	 */
-	public ImageInpaint(BufferedImage oImg, BufferedImage maskedImage) {
-		this.omega = 0.7;
-		this.Alpha = 0.2;
-		this.Beta = 0.8;
-	}
 	
-	public ImageInpaint(int[][] orig_pixel, int[][] masked_pixel) {
-		
-		this.omega = 0.7;
-		this.Alpha = 0.2;
-		this.Beta = 0.8;
+//	public ImageInpaint(int[][] orig_pixel, int[][] masked_pixel, int[][] maskedMap) {
+	public ImageInpaint(BufferedImage oImg, BufferedImage maskedImg) {	
+		initialize_constants();
 		maskedColor = Entry.getInstance().maskColor;
 		
-		this.pixelmap = orig_pixel;
-		this.fillPixelmap = masked_pixel;
+//		this.biMaskedMap = maskedMap;
+//		this.pixelmap = orig_pixel;
+//		this.fillPixelmap = masked_pixel;
 		
-		System.out.println("ImageInpaint Constructor...");
-		System.out.println("\t"+orig_pixel[0].length+" x "+masked_pixel.length);
-		System.out.println("maskedColor: "+maskedColor[0]+" "+maskedColor[1]+" "+maskedColor[2]);
+		this.pixelmap = Entry.getInstance().original_pixel;
+		this.fillPixelmap = Entry.getInstance().masked_pixel;
+		this.biMaskedMap = Entry.getInstance().masked_binary;
+																// problems: pixelsRECEIVED
 		
-		printPixels(orig_pixel, masked_pixel, 100);
+//		printPixels(orig_pixel, 100);
+//		printPixels(masked_pixel, 100);
+		
+		int [][]orig_pixel = Entry.getInstance().toPixelArray(oImg);			// sa Entry ko 'to kinuha, dun ko din ipaprocess xD
+		int [][]masked_pixel = Entry.getInstance().toPixelArray(maskedImg);
 		
 		initialize(orig_pixel, masked_pixel, true);
+		
 	}
 	
-	public void printPixels(int[][] og, int[][] masked, int sq) {
-		System.out.println("\tprinting pixels\nOriginal");
+	public void initialize_constants(){
+		this.omega = 0.7;
+		this.Alpha = 0.2;
+		this.Beta = 0.8;
+	}
+	
+//	public int[][] extractPixels(BufferedImage img){
+//		
+//	}
+	
+	public void printPixels(int[][] pixels, int sq) {
+		System.out.println("\tprinting pixels\nOg1 masked2");
 		for(int y=0; y<sq; y++) {
 			for(int x=0; x<sq; x++) {
-				System.out.print(og[x][y]+"");
+				System.out.print(pixels[x][y]+".");
 			}
 			System.out.println();
 		}
-		System.out.println("\n\nwith Target Region");
-		for(int y=0; y<sq; y++) {
-			for(int x=0; x<sq; x++) {
-				System.out.print(masked[x][y]+"");
-			}
-			System.out.println();
-		}
-		
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -139,6 +142,7 @@ public class ImageInpaint {
 		initialize_confidence_term(); // Initialize the confidence term
 		initialize_data_term(); // Initialize the data term
 
+		System.out.println("initialized data...");
 		fillRegion = new double[ih][iw]; // Allocate Space for fillRegion
 		sourceRegion = new int[ih][iw]; // Allocate Space for SourceRegion
 		initialSourceRegion = new int[ih][iw]; // Allocate Space for initialSourceRegion
@@ -146,6 +150,7 @@ public class ImageInpaint {
 		/**
 		 * Initialize minX, minY, maxX and maxY to find these coordinates
 		 */
+		
 		minX = iw;
 		minY = ih;
 		maxX = maxY = 0;
@@ -165,7 +170,8 @@ public class ImageInpaint {
 				/**
 				 * If the color is masked color set in entry.java(green), mark it as fillRegion Otherwise mark it as SourceRegion.
 				 */
-				if (r == maskedColor[0] && g == maskedColor[1] && b == maskedColor[2]) {
+				if (r == maskedColor[1] && g == maskedColor[2] && b == maskedColor[3] &&
+						biMaskedMap[i][j] < 0) {
 					countrow++; // Increase the number of continuous green pixels
 					fillRegion[i][j] = 1;
 					sourceRegion[i][j] = 0;
@@ -193,7 +199,9 @@ public class ImageInpaint {
 				}
 			}
 		}
-
+		System.out.println("Initialize minX, minY, maxX and maxY to find these coordinates");
+		
+		
 		for (i = 0; i < iw; ++i) {
 			countcol = 0;
 			for (j = 0; j < ih; ++j) {
@@ -204,7 +212,8 @@ public class ImageInpaint {
 				/**
 				 * If pixel is green, increase the countcol by 1.
 				 */
-				if (r == maskedColor[0] && g == maskedColor[1] && b == maskedColor[2]) {
+				if (r == maskedColor[1] && g == maskedColor[2] && b == maskedColor[3] &&
+						biMaskedMap[i][j] < 0) {
 					countcol++; // Increase the number of continuous green pixels
 				} else {
 					if (countcol > continuousCol) {
@@ -228,8 +237,11 @@ public class ImageInpaint {
 		double count; // Temporary variable used in calculating confidence terms for patches
 		double Rcp; // Temporary variable used in calculating confidence terms for patches
 		double tempPriority; // Temporary variable used in calculating maximum priority
-
+		
+		int counter = 0;
+		
 		while (flag) {
+			System.out.println("flag"+flag);
 
 			/**
 			 * Filter the fillRegion with Laplacian Filter. Done to find the pixels on the boundary.
@@ -250,6 +262,7 @@ public class ImageInpaint {
 			/**
 			 * Add the coordinates of boundary pixels to dR and their gradients to Nx and Ny.
 			 */
+			System.out.println("\tAdd the coordinates of boundary pixels to dR and their gradients to Nx and Ny.");
 			for (i = 0; i < temp[0].length; i++) {
 				for (j = 0; j < temp.length; j++) {
 					if (temp[j][i] > 0) {
@@ -268,6 +281,7 @@ public class ImageInpaint {
 			/**
 			 * Now calculate Confidence Terms for all the pixels in the boundary of target region.
 			 */
+			System.out.println("\tNow calculate Confidence Terms for all the pixels in the boundary of target region.");
 			for (i = 0; i < dR.size(); i++) {
 				int[][] Hp = getpatch(fillPixelmap, (Integer) dR.get(i));				// 5119 will use fillPixelmap instead bc pixelmap is the original image
 																			// but prolly it's just fine bc we wont use the values of pixelmap
@@ -294,6 +308,8 @@ public class ImageInpaint {
 			 * After calculating confidence terms, now calculate data term and then find the patch with maximum
 			 * priority. This is done using the additive priority term.
 			 */
+			
+			System.out.println("\tFIND MAX PRIORITY boundarySize: "+dR.size());
 			for (i = 0; i < dR.size(); i++) {
 				int col = (Integer) dR.get(i) / ih;
 				int row = (Integer) dR.get(i) % ih;
@@ -316,12 +332,15 @@ public class ImageInpaint {
 				if (tempPriority >= maxPriority) {
 					maxPriority = tempPriority;
 					maxPriorityIndex = i;
+					System.out.println("\t\t"+col+","+row);
 				}
 			}
 
 			if (maxPriorityIndex == -1) {
+				System.out.println("did i?");
 				break; // If no patch is found, then inpainting is complete.
 			}
+			System.out.println("\t!!!!BREAK ALERT: If no patch is found, then inpainting is complete.");
 
 			/**
 			 * Obtain the patch with maximum priority.
@@ -333,7 +352,7 @@ public class ImageInpaint {
 			int[][] Hp = getpatch(fillPixelmap, (Integer) dR.get(maxPriorityIndex));		// changing pixelmap->fillPixelmap 5219
 			double[][] toFill = new double[Hp.length][Hp[0].length];
 			double[][] toFillTrans = new double[Hp[0].length][Hp.length];
-
+			System.out.println("\tObtain patch with max prio");
 			/**
 			 * Calculate ToFill and ToFillTrans
 			 */
@@ -345,7 +364,8 @@ public class ImageInpaint {
 					toFillTrans[j][i] = fillRegion[row][col];
 				}
 			}
-
+			System.out.println("\tcalculate tofill and tofilltrans");
+			
 			pixelPosX = (Integer) dR.get(maxPriorityIndex) / ih;
 			pixelPosY = (Integer) dR.get(maxPriorityIndex) % ih;
 			/**
@@ -353,7 +373,7 @@ public class ImageInpaint {
 			 * now get the starting and ending X and Y coordinates of the best Patch.
 			 */
 			int[] best = bestExemplar(Hp, toFillTrans, initialSourceRegion, inpaint);
-
+			System.out.println("\tfound the best exemplar");
 			int nRows = best[3] - best[2] + 1;
 			int nCols = best[1] - best[0] + 1;
 
@@ -370,6 +390,7 @@ public class ImageInpaint {
 					Hq[i][j] = X[i][j] + Y[i][j] * ih;
 				}
 			}
+			System.out.println("find the patch represented by best");
 
 			int p = (Integer) dR.get(maxPriorityIndex);
 
@@ -432,12 +453,15 @@ public class ImageInpaint {
 			if (halt) {
 				break; // Stop Inpainting if owner halts the process.
 			}
+			++counter;
+			System.out.println("counter: "+ counter);
 		}
 		/**
 		 * No need of gradient calculator now. Mark it as null to drop a hint to garbageCollector that it can now be
 		 * removed.
 		 */
 		gc = null;
+		counter = 0;
 //		if (!halt) {																// removed downwards i dont understand
 //			completed = true;
 //		} else {
@@ -445,6 +469,7 @@ public class ImageInpaint {
 //		}
 ////		owner.updateStats(origImg); // Inform the owner about the updates.
 //		Thread.yield();
+		System.out.println("last line in initialize(...)");
 	}
 	
 
@@ -464,8 +489,9 @@ public class ImageInpaint {
 				int g = 0xff & p >> 8;
 				int b = 0xff & p;
 				
-				if (r == maskedColor[0] && g == maskedColor[1] && b == maskedColor[2]) {				// get masked color to set to this comparison and now im tired
-					confidence[i][j] = 0;
+				if (r == maskedColor[1] && g == maskedColor[2] && b == maskedColor[3]				// get masked color to set to this comparison and now im tired
+						&& biMaskedMap[i][j] < 0) {
+						confidence[i][j] = 0;
 				} else {
 					confidence[i][j] = 1;
 				}

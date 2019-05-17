@@ -12,10 +12,11 @@ import main.Entry;
 import inpainting_utils.ScaledImagePanel;
 
 public class DisplayThreePanel extends JPanel{
+	
 	public static DisplayThreePanel instance;
 	public JButton process, next;
 	private JSpinner kspinner;
-	private BufferedImage img;
+	private BufferedImage image;
 	public ScaledImagePanel clustering, regionGrowing, spam; 
 	public boolean segmenting;
 	//private final String one = "SPAM", two = "KMeans", three = "Region Growing";
@@ -56,27 +57,21 @@ public class DisplayThreePanel extends JPanel{
 			
 	}
 	
-	public void setImage() {
-		this.img = Entry.getInstance().getImage();
+	public void setImage(BufferedImage img) {
+		this.image = img;
 	}
 	public BufferedImage getImage() {
-		return this.img;
+		return this.image;
 	}
 	public void displaySegmentationBoxes() {
-		spam.setDisplayImg(img);
-		clustering.setDisplayImg(img);
-		regionGrowing.setDisplayImg(img);
+		spam.setDisplayImg(image);
+		clustering.setDisplayImg(image);
+		regionGrowing.setDisplayImg(image);
 	}
 	
 	public int kspinnerValue() {
 		String ss =  kspinner.getValue().toString();
-		System.out.println("sssssssssssssssss: "+ss);
 		return Integer.parseInt(ss);
 	}
 	
-//	public static DisplayThreePanel getInstance() {
-//		if(instance==null)
-//			instance = new DisplayThreePanel();
-//		return instance;
-//	}
 }

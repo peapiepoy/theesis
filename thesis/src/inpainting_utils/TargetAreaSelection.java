@@ -16,7 +16,6 @@ import view.TargetSelection;
 public class TargetAreaSelection extends JPanel {
 	private BufferedImage img;
 	public int xSize, ySize;
-//	public int x, y;
 	public boolean enabled, createPoly;
 	public Vector PolygonX;
 	public Vector PolygonY;
@@ -24,15 +23,19 @@ public class TargetAreaSelection extends JPanel {
 	
 	public TargetAreaSelection(BufferedImage img){
 		setLayout(null);
+		
 		this.img= img;
+		this.img = main.Entry.getInstance().getImage();
 		this.enabled = false;
 		this.createPoly = false;
 		this.xSize = img.getWidth(this);
 		this.ySize = img.getHeight(this);
 		this.PolygonX = new Vector<>();
 		this.PolygonY = new Vector<>();
+		
 		init();
 	}
+	
 	public void reset() {
 		this.enabled = false;
 		this.enabled = false;
@@ -84,7 +87,7 @@ public class TargetAreaSelection extends JPanel {
 				polyX[u] = (Integer) PolygonX.get(u);
 				polyY[u] = (Integer) PolygonY.get(u);
 			}
-			g.setColor(new Color(255,255,255,80));
+			g.setColor(new Color(255,255,255,80));				// OPACITY @ 80, poly filled with white
 			g.fillPolygon(polyX, polyY, PolygonX.size());
 			
 			
@@ -98,6 +101,8 @@ public class TargetAreaSelection extends JPanel {
 	public Vector getPointsY() {
 		return PolygonY;
 	}
+	
+	// add to Polygon the coordinates as angles
 	public void addToPolyCoords(int x, int y) {
 		if(PolygonX.size()>2 && ( (x >= (Integer)PolygonX.get(0)-5) && (x <= (Integer)PolygonX.get(0)+5) ) &&
 				( (y >= (Integer)PolygonY.get(0)-5) && (y <= (Integer)PolygonY.get(0)+5) )	){
