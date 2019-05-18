@@ -23,8 +23,8 @@ import controller.MouseHandler;
 public class Entry {
 	
 	private static Entry instance;
-	private BufferedImage img, grayscaled, masked;
-	private Image oImg;
+	private BufferedImage image, grayscaled, masked, inpaintedImage;
+	private Image oimage;
 	private TargetAreaSelection targetArea;
 	public DisplayThreePanel segmenting, inpainting_panels;
 	private Polygon targetRegionPoly;
@@ -51,27 +51,29 @@ public class Entry {
  */
 	public void setImage(String path) {
 		try {
-			this.oImg = ImageIO.read(new File(""+path));
+			this.oimage = ImageIO.read(new File(""+path));
 		} catch (IOException e) {
 			System.out.println("File not loaded!");
 			System.exit(0);
 		}
-		this.img = new BufferedImage(oImg.getWidth(null), oImg.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+		this.image = new BufferedImage(oimage.getWidth(null), oimage.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+		this.inpaintedImage = new BufferedImage(oimage.getWidth(null), oimage.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 		
-		Graphics2D bGr = img.createGraphics();
-	    bGr.drawImage(oImg, 0, 0, null);
+		
+		Graphics2D bGr = image.createGraphics();
+	    bGr.drawImage(oimage, 0, 0, null);
 	    bGr.dispose();
 	    
-	    this.original_pixel = toPixelArray(img);
+	    this.original_pixel = toPixelArray(image);
 	    
-		this.targetArea = new TargetAreaSelection(img);
+		this.targetArea = new TargetAreaSelection(image);
 		TargetSelection.getInstance().addImageToScrollpane();
 		
 		MouseHandler.getInstance();
 	}
 	
 	public BufferedImage getImage() {
-		return this.img;
+		return this.image;
 	}
 	
 	
@@ -84,11 +86,11 @@ public class Entry {
 		this.ssd_spam = this.segmenting.ssdSpinnerValue();
 		this.ms_spam = this.segmenting.msSpinnerValue();
 		
-		this.spam = new SpAM(img, ssd_spam, msd_spam, ms_spam);
-		this.clustering = new Clustering(img, k_clustering);
+		this.spam = new SpAM(image, ssd_spam, msd_spam, ms_spam);
+		this.clustering = new Clustering(image, k_clustering);
 		
-		this.segmenting.spam.setDisplayImg(this.spam.getSegmentedImage());
-		this.segmenting.clustering.setDisplayImg(this.clustering.getSegmentedImage());
+		this.segmenting.spam.setDisplayImage(this.spam.getSegmentedImage());
+		this.segmenting.clustering.setDisplayImage(this.clustering.getSegmentedImage());
 		
 	}
 	
@@ -96,7 +98,12 @@ public class Entry {
  * 	when inpainting button is clicked	
  */
 	public void inpaintingProcess() {
-		this.imageInpainting = new ImageInpaint(img, masked); //is this true???? 4 26
+		this.imageInpainting = new ImageInpaint(image, masked); //is this true???? 4 26
+		this.inpaintedImage = imageInpainting.getInpaintedImage();
+		// display this inpaintedImage
+		System.out.println("\n\ndisplaying segmented image....");
+		this.inpainting_panels.setImage(this.inpaintedImage);
+		this.inpainting_panels.displaySegmentationBoxes();
 	}
 
 	public TargetAreaSelection getTargetAreaSelection() {
@@ -108,7 +115,7 @@ public class Entry {
 		int iw = image.getWidth();
 		int ih = image.getHeight();
 		int pixels[] = new int[iw * ih];
-		PixelGrabber pg = new PixelGrabber(img, 0, 0, iw, ih, pixels, 0, iw);
+		PixelGrabber pg = new PixelGrabber(image, 0, 0, iw, ih, pixels, 0, iw);
 		
 		pixelmap = new int[ih][iw];
 		
@@ -131,14 +138,14 @@ public class Entry {
 /*toArray()
  * creates representation of the image to a 2d array
  * and setting the max and min pixel
- * toArray() method is removed and replaced with a generic method toPixelArray(BufferedImage img)
+ * toArray() method is removed and replaced with a generic method toPixelArray(BufferedImage image)
  * to see the method, review at docs>198.2>code collections>toArray().txt 
  */
 	
 	
 	public BufferedImage grayscaling(int[][] pixelmap) {
-		int iw = img.getWidth();
-		int ih = img.getHeight();
+		int iw = image.getWidth();
+		int ih = image.getHeight();
 		int pixel, a, r, g, b, ave;
 		grayscaled = new BufferedImage(iw, ih, BufferedImage.TYPE_BYTE_GRAY);
 		
@@ -203,13 +210,13 @@ public class Entry {
 		setPolygon(); //saves polygon in the Entry class
 		this.masked = imageMasking();							
 		
-		this.inpainting_panels.setImage(this.img);
+		this.inpainting_panels.setImage(this.image);
 		this.inpainting_panels.displaySegmentationBoxes();
 				
 		// display the selected target region to the DisplayThreePanels
 		this.inpainting_panels.process.setText("Inpainting Process");
-		this.inpainting_panels.spam.setDisplayImg(masked);
-		this.inpainting_panels.clustering.setDisplayImg(masked);
+		this.inpainting_panels.spam.setDisplayImage(masked);
+		this.inpainting_panels.clustering.setDisplayImage(masked);
 		// kulang pa for region growing oops
 	}
 	

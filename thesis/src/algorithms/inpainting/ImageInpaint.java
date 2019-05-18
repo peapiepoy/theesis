@@ -14,8 +14,6 @@
 
 package algorithms.inpainting;
 
-
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
@@ -30,7 +28,7 @@ import main.Entry;
  * @author Sapan & Pulkit
  */
 public class ImageInpaint {
-	BufferedImage origImg; // BufferedImage Object to represent updated image at every step
+	BufferedImage inpaintedImage; // BufferedImage Object to represent updated image at every step
 	Image fillImg; // Image Object to represent Image with target region marked
 	BufferedImage img; // BufferedImage Object to represent original Image
 	WritableRaster raster; // Raster to write to the image
@@ -103,8 +101,12 @@ public class ImageInpaint {
 		this.ih = oImg.getHeight();
 		this.iw= oImg.getWidth();
 		
-		process(oImg, maskedImg, true);
+		this.inpaintedImage = process(oImg, maskedImg, true);
 		
+	}
+	
+	public BufferedImage getInpaintedImage() {
+		return this.inpaintedImage;
 	}
 	
 	public void initialize_constants(){
@@ -149,12 +151,14 @@ public class ImageInpaint {
 	
 	@SuppressWarnings("unchecked")
 	//public void initialize(int[][] orig_pixel, int[][] masked_pixel, boolean inpaint) {
-	public void process(BufferedImage original, BufferedImage masked, boolean inpaint) {
+	public BufferedImage process(BufferedImage original, BufferedImage masked, boolean inpaint) {
 		halt = false;
 		int i,j;
 		
+		BufferedImage inpaintedImg = original;
 		this.pixelmap = grabPixels(original);
 		this.fillPixelmap = grabPixels(masked);
+		raster = inpaintedImg.getRaster();
 	
 		/**
 		 * Create instance of GradientCalculator to calculate gradients.
@@ -167,7 +171,7 @@ public class ImageInpaint {
 		initialize_confidence_term(); // Initialize the confidence term
 		initialize_data_term(); // Initialize the data term
 
-		System.out.println("initialized data...");
+		System.out.println("initialized data term...");
 		fillRegion = new double[ih][iw]; // Allocate Space for fillRegion
 		sourceRegion = new int[ih][iw]; // Allocate Space for SourceRegion
 		initialSourceRegion = new int[ih][iw]; // Allocate Space for initialSourceRegion
@@ -191,14 +195,11 @@ public class ImageInpaint {
 				r = 0xff & pixel >> 16; // Obtain the red Component
 				g = 0xff & pixel >> 8; // Obtain the green Component
 				b = 0xff & pixel; // Obtain the blue Component
-				if(i<20)
-					System.out.println(r+","+g+","+b);
 				/**
 				 * If the color is masked color set in entry.java(green), mark it as fillRegion Otherwise mark it as SourceRegion.
 				 */
 				if (r == maskedColor[1] && g == maskedColor[2] && b == maskedColor[3]) {
 					++mcount;
-					System.out.println("masked region "+mcount);
 					countrow++; // Increase the number of continuous green pixels
 					fillRegion[i][j] = 1;
 					sourceRegion[i][j] = 0;
@@ -363,10 +364,9 @@ public class ImageInpaint {
 			}
 
 			if (maxPriorityIndex == -1) {
-				System.out.println("did i?");
+				System.out.println("BREAK: NO PATCH IS FOUND. inpainting complete");
 				break; // If no patch is found, then inpainting is complete.
 			}
-			System.out.println("\t!!!!BREAK ALERT: If no patch is found, then inpainting is complete.");
 
 			/**
 			 * Obtain the patch with maximum priority.
@@ -445,10 +445,11 @@ public class ImageInpaint {
 						/**
 						 * Update the image pixels
 						 */
-						int[] color = new int[3];
-						color[0] = 0xff & pixelmap[row1][col1] >> 16;
-						color[1] = 0xff & pixelmap[row1][col1] >> 8;
-						color[2] = 0xff & pixelmap[row1][col1];
+						int[] color = new int[4];
+						color[0] = 0xff & 255 >> 24;
+						color[1] = 0xff & pixelmap[row1][col1] >> 16;
+						color[2] = 0xff & pixelmap[row1][col1] >> 8;
+						color[3] = 0xff & pixelmap[row1][col1];
 						raster.setPixel(col, row, color);
 					}
 				}
@@ -495,7 +496,8 @@ public class ImageInpaint {
 //		}
 ////		owner.updateStats(origImg); // Inform the owner about the updates.
 //		Thread.yield();
-		System.out.println("last line in initialize(...)");
+		System.out.println("last line in process(...)");
+		return inpaintedImg;
 	}
 	
 
@@ -503,8 +505,6 @@ public class ImageInpaint {
 	 * Initializes the confidence term to zero for pixels in target region and 1 for pixels in source region.
 	 */
 	void initialize_confidence_term() {
-		System.out.println("initializing confidence term...");
-		
 		confidence = new double[ih][iw];
 		
 		for (int i = 0; i < ih; i++) {
@@ -515,16 +515,12 @@ public class ImageInpaint {
 				int g = 0xff & p >> 8;
 				int b = 0xff & p;
 				
-				if (r == maskedColor[1] && g == maskedColor[2] && b == maskedColor[3]				// get masked color to set to this comparison and now im tired
-						&& biMaskedMap[i][j] < 0) {
+				if (r == maskedColor[1] && g == maskedColor[2] && b == maskedColor[3] ) {				// get masked color to set to this comparison and now im tired
 						confidence[i][j] = 0;
 				} else {
 					confidence[i][j] = 1;
 				}
-				int cfd = (int)confidence[i][j];
-				System.out.print(cfd+"");
 			}
-			System.out.println(" "+i);
 		}
 	}
 
