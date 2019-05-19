@@ -30,7 +30,7 @@ import main.Entry;
 public class ImageInpaint {
 	BufferedImage inpaintedImage; // BufferedImage Object to represent updated image at every step
 	Image fillImg; // Image Object to represent Image with target region marked
-	BufferedImage img; // BufferedImage Object to represent original Image
+	BufferedImage image; // BufferedImage Object to represent original Image
 	WritableRaster raster; // Raster to write to the image
 	int iw, ih; // iw: Width of Image, ih: Height of Image
 	int pixels[]; // Temporary array that will initially store the grabbed pixels
@@ -82,32 +82,15 @@ public class ImageInpaint {
 		initialize_constants();
 		maskedColor = Entry.getInstance().maskColor;
 		
-//		this.biMaskedMap = maskedMap;
-//		this.pixelmap = orig_pixel;
-//		this.fillPixelmap = masked_pixel;
-		
-//		this.pixelmap = Entry.getInstance().original_pixel;
-//		this.fillPixelmap = Entry.getInstance().masked_pixel;
-//		this.biMaskedMap = Entry.getInstance().masked_binary;
-																// problems: pixelsRECEIVED
-		
-//		printPixels(orig_pixel, 100);
-//		printPixels(masked_pixel, 100);
-		
-//		int [][]orig_pixel = Entry.getInstance().toPixelArray(oImg);			// sa Entry ko 'to kinuha, dun ko din ipaprocess xD
-//		int [][]masked_pixel = Entry.getInstance().toPixelArray(maskedImg);
-		
-//		initialize(orig_pixel, masked_pixel, true);
 		this.ih = oImg.getHeight();
 		this.iw= oImg.getWidth();
+		System.out.println("\n\n=========ImageInpaint.njava==========\n\n");
 		
 		this.inpaintedImage = process(oImg, maskedImg, true);
 		
 	}
 	
-	public BufferedImage getInpaintedImage() {
-		return this.inpaintedImage;
-	}
+	
 	
 	public void initialize_constants(){
 		this.omega = 0.7;
@@ -855,5 +838,9 @@ public class ImageInpaint {
 			return bestExemplar(Hp, toFill, sourceRegion, false);
 		}
 		return best;
+	}
+	
+	public BufferedImage getInpaintedImage() {
+		return this.inpaintedImage;
 	}
 }
