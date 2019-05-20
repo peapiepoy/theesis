@@ -58,7 +58,9 @@ public class TargetAreaSelection extends JPanel {
 	public void showImage() {
 		repaint();
 	}
-	public void paint(Graphics g) {
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		
 		g.drawImage(image, 0, 0, this);
 		
 		for(int p = 0; p < PolygonX.size(); p++) {

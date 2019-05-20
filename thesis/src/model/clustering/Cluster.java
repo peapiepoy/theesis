@@ -113,7 +113,7 @@ public class Cluster {
 	 */
 	public void setClusterColor(){
 		Color newCol;
-		int R=0,G=0,B=0;
+		int R=0,G=0,B=0, r,g,b;
 		for(int i=0;i<this.clusterArray.size();i++){
 			R = R+this.clusterArray.get(i).getPixelR();
 			G = G+this.clusterArray.get(i).getPixelG();
@@ -123,10 +123,14 @@ public class Cluster {
 		try{
 			newCol = new Color(R/this.clusterArray.size(),G/this.clusterArray.size(),B/this.clusterArray.size());
 		}catch(ArithmeticException e){
-			newCol = new Color(0,0,0);
+			r = (int) (Math.random() * ((200) + 1)) + 5;
+			g = (int) (Math.random() * ((155) + 50)) + 12;
+			b = (int) (Math.random() * ((125) + 25)) + 15;
+			newCol = new Color(r,g,b);
 		}
 		
 		System.out.println(newCol.getRed()+"   "+newCol.getGreen()+"   "+newCol.getBlue()+"   ");
 		this.clusterColor = newCol;
+		
 	}
 }

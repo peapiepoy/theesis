@@ -31,7 +31,7 @@ public class Entry {
 	public int[][] original_pixel, masked_pixel, masked_binary;
 	public int maxTH, minTH;					// im afraid we wont use this anymore
 	// segmentation Split and Merge
-	private SpAM spam;
+	//private SpAM spam;
 	public Clustering clustering;
 	public ImageInpaint imageInpainting;
 	public int k_clustering, msd_spam, ssd_spam, ms_spam;
@@ -86,10 +86,10 @@ public class Entry {
 		this.ssd_spam = this.segmenting.ssdSpinnerValue();
 		this.ms_spam = this.segmenting.msSpinnerValue();
 		
-		this.spam = new SpAM(image, ssd_spam, msd_spam, ms_spam);
+		//this.spam = new SpAM(image, ssd_spam, msd_spam, ms_spam);
 		this.clustering = new Clustering(image, k_clustering);
 		
-		this.segmenting.spam.setDisplayImage(this.spam.getSegmentedImage());
+		//this.segmenting.spam.setDisplayImage(this.spam.getSegmentedImage());
 		this.segmenting.clustering.setDisplayImage(this.clustering.getSegmentedImage());
 		
 	}
