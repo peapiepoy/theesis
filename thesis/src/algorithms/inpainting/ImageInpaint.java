@@ -522,9 +522,7 @@ public class ImageInpaint {
 					confidence[i][j] = 1;
 				}
 				int cfd = (int)confidence[i][j];
-				System.out.print(cfd+"");
 			}
-			System.out.println(" "+i);
 		}
 	}
 
