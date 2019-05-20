@@ -14,22 +14,22 @@ import javax.swing.JPanel;
 import view.TargetSelection;
 
 public class TargetAreaSelection extends JPanel {
-	private BufferedImage img;
+	private BufferedImage image;
 	public int xSize, ySize;
 	public boolean enabled, createPoly;
 	public Vector PolygonX;
 	public Vector PolygonY;
 	
 	
-	public TargetAreaSelection(BufferedImage img){
+	public TargetAreaSelection(BufferedImage image){
 		setLayout(null);
 		
-		this.img= img;
-		this.img = main.Entry.getInstance().getImage();
+		this.image= image;
+		this.image = main.Entry.getInstance().getImage();
 		this.enabled = false;
 		this.createPoly = false;
-		this.xSize = img.getWidth(this);
-		this.ySize = img.getHeight(this);
+		this.xSize = image.getWidth(this);
+		this.ySize = image.getHeight(this);
 		this.PolygonX = new Vector<>();
 		this.PolygonY = new Vector<>();
 		
@@ -40,8 +40,8 @@ public class TargetAreaSelection extends JPanel {
 		this.enabled = false;
 		this.enabled = false;
 		this.createPoly = false;
-		this.xSize = img.getWidth(this);
-		this.ySize = img.getHeight(this);
+		this.xSize = image.getWidth(this);
+		this.ySize = image.getHeight(this);
 		this.PolygonX.clear();
 		this.PolygonY.clear();
 		this.PolygonX = new Vector<>();
@@ -59,7 +59,7 @@ public class TargetAreaSelection extends JPanel {
 		repaint();
 	}
 	public void paint(Graphics g) {
-		g.drawImage(img, 0, 0, this);
+		g.drawImage(image, 0, 0, this);
 		
 		for(int p = 0; p < PolygonX.size(); p++) {
 			if(p==0) {

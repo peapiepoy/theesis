@@ -78,9 +78,9 @@ public class DisplayThreePanel extends JPanel{
 		return this.image;
 	}
 	public void displaySegmentationBoxes() {
-		spam.setDisplayImg(image);
-		clustering.setDisplayImg(image);
-		regionGrowing.setDisplayImg(image);
+		spam.setDisplayImage(image);
+		clustering.setDisplayImage(image);
+		regionGrowing.setDisplayImage(image);
 	}
 	
 	public int kSpinnerValue() {
