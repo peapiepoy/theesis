@@ -28,7 +28,7 @@ public class ImageProcessing {
 		this.imageMatrix1 = new Color[width][height];
 		convertIntoArray();
 		doKmeans(k);
-		System.out.println("--------end of kmeans; k: "+k);
+		System.out.println("\t\tEND OF K MEANS "+k);
 	}
 	/**
 	 * Converts image into an 2d array of pixels to work with
