@@ -102,7 +102,7 @@ public class ImageInpaint {
 //		initialize(orig_pixel, masked_pixel, true);
 		this.ih = oImg.getHeight();
 		this.iw= oImg.getWidth();
-		
+		System.out.println("\n\n\t\tINPAINTING\n\n");
 		process(oImg, maskedImg, true);
 		
 	}
