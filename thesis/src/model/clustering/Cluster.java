@@ -110,8 +110,9 @@ public class Cluster {
 
 	/**
 	 * Sets the clusterColor. That value should be an output representaton of cluster color on output image
+	 * this is of no use anymore. no random colors anymore. this frequently gives black bc of the catch method 52119
 	 */
-	public void setClusterColor(){
+	public void setsClusterColor(){
 		Color newCol;
 		int R=0,G=0,B=0, r,g,b;
 		for(int i=0;i<this.clusterArray.size();i++){
@@ -123,14 +124,44 @@ public class Cluster {
 		try{
 			newCol = new Color(R/this.clusterArray.size(),G/this.clusterArray.size(),B/this.clusterArray.size());
 		}catch(ArithmeticException e){
+
 			r = (int) (Math.random() * ((200) + 1)) + 5;
 			g = (int) (Math.random() * ((155) + 50)) + 12;
 			b = (int) (Math.random() * ((125) + 25)) + 15;
 			newCol = new Color(r,g,b);
+
+//			r = (int) Math.random()*255 + 125;
+//			g = (int) Math.random()*130;
+//			b = (int) Math.random()*255;
+//			newCol = new Color(r, g, b);
+
 		}
 		
 		System.out.println(newCol.getRed()+"   "+newCol.getGreen()+"   "+newCol.getBlue()+"   ");
 		this.clusterColor = newCol;
 		
+	}
+	
+	public void setClusterColor(int i) {
+		Color newCol = new Color(0,0,0);
+		int r=0,g=0,b=0;
+		if(i == 0) {
+			r=255;g=0;b=0;
+		}else if ( i == 1) {
+			r=0;g=255;b=0;
+		}else if( i==2) {
+			r=0;g=0;b=255;
+		}else if(i==3) {
+			r=255;g=255;b=0;
+		}else if(i==4) {
+			r=0;g=255;b=255;
+		}else if(i==5) {
+			r=255;g=0;b=255;
+		}
+		newCol = new Color(r,g,b);
+
+		System.out.println(newCol.getRed()+"   "+newCol.getGreen()+"   "+newCol.getBlue()+"   ");
+		this.clusterColor = newCol;	
+			
 	}
 }

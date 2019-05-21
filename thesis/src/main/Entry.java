@@ -25,13 +25,13 @@ public class Entry {
 	private static Entry instance;
 	private BufferedImage image, grayscaled, masked, inpaintedImage;
 	private Image oimage;
-	private TargetAreaSelection targetArea;
+	private TargetAreaSelection targetAreaSelection;
 	public DisplayThreePanel segmenting, inpainting_panels;
 	private Polygon targetRegionPoly;
 	public int[][] original_pixel, masked_pixel, masked_binary;
 	public int maxTH, minTH;					// im afraid we wont use this anymore
 	// segmentation Split and Merge
-	//private SpAM spam;
+	private SpAM spam;
 	public Clustering clustering;
 	public ImageInpaint imageInpainting;
 	public int k_clustering, msd_spam, ssd_spam, ms_spam;
@@ -66,7 +66,7 @@ public class Entry {
 	    
 	    this.original_pixel = toPixelArray(image);
 	    
-		this.targetArea = new TargetAreaSelection(image);
+		this.targetAreaSelection = new TargetAreaSelection();
 		TargetSelection.getInstance().addImageToScrollpane();
 		
 		MouseHandler.getInstance();
@@ -74,6 +74,10 @@ public class Entry {
 	
 	public BufferedImage getImage() {
 		return this.image;
+	}
+	
+	public void TASdisplayImage() {
+		this.targetAreaSelection.setImage(this.image);
 	}
 	
 	
@@ -86,10 +90,10 @@ public class Entry {
 		this.ssd_spam = this.segmenting.ssdSpinnerValue();
 		this.ms_spam = this.segmenting.msSpinnerValue();
 		
-		//this.spam = new SpAM(image, ssd_spam, msd_spam, ms_spam);
+		this.spam = new SpAM(image, ssd_spam, msd_spam, ms_spam);
 		this.clustering = new Clustering(image, k_clustering);
 		
-		//this.segmenting.spam.setDisplayImage(this.spam.getSegmentedImage());
+		this.segmenting.spam.setDisplayImage(this.spam.getSegmentedImage());
 		this.segmenting.clustering.setDisplayImage(this.clustering.getSegmentedImage());
 		
 	}
@@ -107,7 +111,7 @@ public class Entry {
 	}
 
 	public TargetAreaSelection getTargetAreaSelection() {
-		return targetArea;
+		return targetAreaSelection;
 	}
 	
 	public int[][] toPixelArray(BufferedImage image){

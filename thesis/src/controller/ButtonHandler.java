@@ -67,6 +67,7 @@ public class ButtonHandler implements ActionListener{
 		}
 		
 		else if(e.getSource() == Entry.getInstance().segmenting.next) {
+			Entry.getInstance().TASdisplayImage();
 			Main.getInstance().nextCard();
 		}
 		
