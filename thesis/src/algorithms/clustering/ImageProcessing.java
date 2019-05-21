@@ -12,7 +12,7 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 
 public class ImageProcessing {
-	BufferedImage image;
+	private BufferedImage image;
 	int height;
 	int width;
 	Color imageMatrix1[][];
@@ -43,7 +43,7 @@ public class ImageProcessing {
 				green = c.getGreen();
 				blue = c.getBlue();
 				imageMatrix1[x][y] = new Color(red,green,blue);
-				c1 = new Color(0,0,0); //na pocz�tku obraz jest wype�niany na czarno
+				c1 = new Color(0,0,0); //na pocz�tku obraz jest wype�niany na czarno in the beginning, the image is filled in black
 				this.image.setRGB(x, y, c1.getRGB());
 			}
 		}
@@ -70,21 +70,22 @@ public class ImageProcessing {
 		boolean centerChange[] = new boolean[clusterCount];
 		Random random = new Random();
 		//for(int i=1;i<=clusterCount;i++) center[i-1] = new Cluster(new Pixel(255/clusterCount*(i)));
-		for(int i=0;i<clusterCount;i++) center[i] = new Cluster(new Pixel(random.nextInt(256),random.nextInt(256),random.nextInt(256))); //losuj� warto�ci centroid�w w skali szaro�ci
+		for(int i=0;i<clusterCount;i++) 
+			center[i] = new Cluster(new Pixel(random.nextInt(256),random.nextInt(256),random.nextInt(256))); //losuj� warto�ci centroid�w w skali szaro�ci
 
 		while(globalChange){
-			for(int i=0;i<clusterCount;i++){ //resetuj� tablice pikseli przynale��cych do centroid�w
+			for(int i=0;i<clusterCount;i++){ //resetuj� tablice pikseli przynale��cych do centroid�w --reset pixel tables belonging to centroids
 				System.out.println(center[i].getCentroidColor()+" getCentroidColor()");
 				center[i].clusterArray = new ArrayList<Pixel>();
 			}
 			System.out.println("");
 			for(int y=0;y<height;y++){
 				for(int x=0;x<width;x++){
-					int minDist =255; //minimalny dystans piksela do najbli�szego centroidu
-					int nearestCenter=0; //liczba reprezentuj�ca najbli�szy centroid
+					int minDist =255; //minimalny dystans piksela do najbli�szego centroidu --the minimum distance of the pixel to the nearest centroid
+					int nearestCenter=0; //a number representing the nearest centroid
 					for(int i=0;i<clusterCount;i++){
 						int dist = Math.abs(colorToGray(imageMatrix1[x][y]) - center[i].getCentroidGray()); //obliczam dystans od itego centroidu
-						if(minDist>dist){ //por�wnuje obliczon� odleg�o�� z minimaln� dotychczasow�
+						if(minDist>dist){ //Compare the calculated distance with the minimum hitherto
 							minDist = dist;
 							nearestCenter = i;
 						}

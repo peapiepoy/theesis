@@ -11,6 +11,7 @@ import java.util.Vector;
 
 import javax.swing.JPanel;
 
+import main.Entry;
 import view.TargetSelection;
 
 public class TargetAreaSelection extends JPanel {
@@ -21,11 +22,9 @@ public class TargetAreaSelection extends JPanel {
 	public Vector PolygonY;
 	
 	
-	public TargetAreaSelection(BufferedImage image){
+	public TargetAreaSelection(){
 		setLayout(null);
-		
-		this.image= image;
-		this.image = main.Entry.getInstance().getImage();
+		this.image = Entry.getInstance().getImage();
 		this.enabled = false;
 		this.createPoly = false;
 		this.xSize = image.getWidth(this);
@@ -49,7 +48,11 @@ public class TargetAreaSelection extends JPanel {
 	}
 	public void init() {
 		this.setPreferredSize(new Dimension(xSize, ySize));
-		repaint();
+		//repaint();
+	}
+	
+	public void setImage(BufferedImage img) {
+		this.image = img;
 	}
 	
 	public void enableSelection(boolean x) {
@@ -59,7 +62,10 @@ public class TargetAreaSelection extends JPanel {
 		repaint();
 	}
 	public void paint(Graphics g) {
-		g.drawImage(image, 0, 0, this);
+		
+		super.paintComponent(g);
+		
+		g.drawImage(Entry.getInstance().getImage(), 0, 0, this);
 		
 		for(int p = 0; p < PolygonX.size(); p++) {
 			if(p==0) {
@@ -104,6 +110,7 @@ public class TargetAreaSelection extends JPanel {
 	
 	// add to Polygon the coordinates as angles
 	public void addToPolyCoords(int x, int y) {
+		System.out.println(x+","+y+"\t\tpolygon points");
 		if(PolygonX.size()>2 && ( (x >= (Integer)PolygonX.get(0)-5) && (x <= (Integer)PolygonX.get(0)+5) ) &&
 				( (y >= (Integer)PolygonY.get(0)-5) && (y <= (Integer)PolygonY.get(0)+5) )	){
 					createPoly = true;
