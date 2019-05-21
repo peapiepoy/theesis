@@ -3,7 +3,9 @@ package algorithms.clustering;
 import model.clustering.*;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,10 +14,11 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 
 public class ImageProcessing {
-	private BufferedImage image;
+	private BufferedImage image, output;
 	int height;
 	int width;
 	Color imageMatrix1[][];
+	WritableRaster raster;
 	
 	/**
 	 * Loads image from file path and initialize height and width of imageMatrix and the matrix 
@@ -23,6 +26,7 @@ public class ImageProcessing {
 	 */
 	public ImageProcessing(BufferedImage image, int k){
 		this.image = image;
+		
 		this.height = this.image.getHeight();
 		this.width = this.image.getWidth();
 		this.imageMatrix1 = new Color[width][height];
@@ -50,7 +54,7 @@ public class ImageProcessing {
 	}
 	
 	public BufferedImage getOutput() {
-		return this.image;
+		return this.output;
 	}
 	/**
 	 * Converts color to gray level 
@@ -69,11 +73,16 @@ public class ImageProcessing {
 		boolean globalChange = true;
 		boolean centerChange[] = new boolean[clusterCount];
 		Random random = new Random();
+		output = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		raster = this.output.getRaster();
+		
+		
 		//for(int i=1;i<=clusterCount;i++) center[i-1] = new Cluster(new Pixel(255/clusterCount*(i)));
-		for(int i=0;i<clusterCount;i++) 
-			center[i] = new Cluster(new Pixel(random.nextInt(256),random.nextInt(256),random.nextInt(256))); //losuj� warto�ci centroid�w w skali szaro�ci
+		for(int i=0;i<clusterCount;i++) // draw centroid values ​​on a gray scale
+			center[i] = new Cluster(new Pixel(random.nextInt(this.image.getWidth()),random.nextInt(this.image.getHeight()),random.nextInt(256))); //losuj� warto�ci centroid�w w skali szaro�ci
 
 		while(globalChange){
+			
 			for(int i=0;i<clusterCount;i++){ //resetuj� tablice pikseli przynale��cych do centroid�w --reset pixel tables belonging to centroids
 				System.out.println(center[i].getCentroidColor()+" getCentroidColor()");
 				center[i].clusterArray = new ArrayList<Pixel>();
@@ -102,13 +111,36 @@ public class ImageProcessing {
 				if(centerChange[i] == true) break;
 				globalChange = false;
 			}
-			
+			System.out.println("global change cycle "+globalChange);
 		}
 		for(int i=0;i<clusterCount;i++){
-			center[i].setClusterColor();
-			System.out.println("clustercolor done");
-			for(int j=0;j<center[i].clusterArray.size();j++){
-				this.image.setRGB(center[i].clusterArray.get(j).xPos, center[i].clusterArray.get(j).yPos, center[i].clusterColor.getRGB());
+			center[i].setClusterColor(i);
+			System.out.println("clustercolor done: "+center[i].clusterArray.size());
+			int clusterSize = center[i].clusterArray.size();
+			for(int j=0;j<clusterSize;j++){
+				//this.image.setRGB(center[i].clusterArray.get(j).xPos, center[i].clusterArray.get(j).yPos, center[i].clusterColor.getRGB());
+//				int[] color = new int[4];
+//				color[0] = 0xff & 255 >> 24;
+//				color[1] = 0xff & center[i].clusterColor.getRed() >> 16;
+//				color[2] = 0xff & center[i].clusterColor.getGreen() >> 8;
+//				color[3] = 0xff & center[i].clusterColor.getBlue();
+//				raster.setPixel(center[i].clusterArray.get(j).xPos, center[i].clusterArray.get(j).yPos, color);
+				
+				int x = center[i].clusterArray.get(j).xPos;
+				int y = center[i].clusterArray.get(j).yPos;
+//				if(j < 300)
+//					System.out.println(x+","+y);
+				
+		         int r = center[i].clusterColor.getRed(); //red
+		         int g = center[i].clusterColor.getGreen(); //green
+		         int b = center[i].clusterColor.getBlue(); //blue
+		 
+		         int p = (255<<24) | (r<<16) | (g<<8) | b; //pixel
+		 
+		         output.setRGB(x, y, p);
+		         
+		         Graphics2D graphics2D = output.createGraphics();
+		         graphics2D.drawImage(output, 0, 0, image.getWidth(), image.getHeight(), null);
 			}
 		}
 	}

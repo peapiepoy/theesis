@@ -1,16 +1,28 @@
-Selected file: /home/computer/git/theesis/thesis/images/square.jpg
-java.awt.Color[r=116,g=116,b=116] getCentroidColor()
-java.awt.Color[r=173,g=173,b=173] getCentroidColor()
-java.awt.Color[r=211,g=211,b=211] getCentroidColor()
+Selected file: /home/computer/git/theesis/thesis/images/181021.jpg
+java.awt.Color[r=225,g=225,b=225] getCentroidColor()
+java.awt.Color[r=81,g=81,b=81] getCentroidColor()
+java.awt.Color[r=46,g=46,b=46] getCentroidColor()
 
-java.awt.Color[r=106,g=164,b=98] getCentroidColor()
-java.awt.Color[r=47,g=221,b=183] getCentroidColor()
-java.awt.Color[r=232,g=241,b=201] getCentroidColor()
+global change cycle true
+java.awt.Color[r=243,g=234,b=222] getCentroidColor()
+java.awt.Color[r=117,g=101,b=91] getCentroidColor()
+java.awt.Color[r=53,g=53,b=48] getCentroidColor()
 
-106   164   98   
-clustercolor done
-57   221   158   
-clustercolor done
-232   241   201   
-clustercolor done
+global change cycle true
+java.awt.Color[r=244,g=235,b=224] getCentroidColor()
+java.awt.Color[r=136,g=116,b=103] getCentroidColor()
+java.awt.Color[r=61,g=59,b=53] getCentroidColor()
+
+global change cycle true
+java.awt.Color[r=245,g=236,b=225] getCentroidColor()
+java.awt.Color[r=150,g=127,b=112] getCentroidColor()
+java.awt.Color[r=67,g=63,b=57] getCentroidColor()
+
+global change cycle false
+255   0   0   
+clustercolor done: 123351
+0   255   0   
+clustercolor done: 15861
+0   0   255   
+clustercolor done: 15189
 --------end of kmeans; k: 3
