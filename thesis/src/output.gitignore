@@ -1,31 +1,15 @@
 Selected file: /home/computer/git/theesis/thesis/images/square.jpg
-java.awt.Color[r=188,g=188,b=188] getCentroidColor()
-java.awt.Color[r=115,g=115,b=115] getCentroidColor()
-java.awt.Color[r=236,g=236,b=236] getCentroidColor()
+java.awt.Color[r=116,g=116,b=116] getCentroidColor()
+java.awt.Color[r=173,g=173,b=173] getCentroidColor()
+java.awt.Color[r=211,g=211,b=211] getCentroidColor()
 
-java.awt.Color[r=33,g=225,b=205] getCentroidColor()
 java.awt.Color[r=106,g=164,b=98] getCentroidColor()
+java.awt.Color[r=47,g=221,b=183] getCentroidColor()
 java.awt.Color[r=232,g=241,b=201] getCentroidColor()
 
-java.awt.Color[r=65,g=215,b=160] getCentroidColor()
-java.awt.Color[r=106,g=164,b=98] getCentroidColor()
-java.awt.Color[r=232,g=241,b=201] getCentroidColor()
-
-java.awt.Color[r=69,g=211,b=142] getCentroidColor()
-java.awt.Color[r=106,g=164,b=98] getCentroidColor()
-java.awt.Color[r=232,g=241,b=201] getCentroidColor()
-
-java.awt.Color[r=3,g=252,b=144] getCentroidColor()
-java.awt.Color[r=193,g=90,b=60] getCentroidColor()
-java.awt.Color[r=232,g=241,b=201] getCentroidColor()
-
-java.awt.Color[r=6,g=250,b=143] getCentroidColor()
-java.awt.Color[r=193,g=90,b=60] getCentroidColor()
-java.awt.Color[r=232,g=241,b=201] getCentroidColor()
-
-6   250   143   
+106   164   98   
 clustercolor done
-193   90   60   
+57   221   158   
 clustercolor done
 232   241   201   
 clustercolor done
