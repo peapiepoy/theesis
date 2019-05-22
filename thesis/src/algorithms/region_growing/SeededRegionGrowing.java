@@ -24,6 +24,7 @@ public class SeededRegionGrowing implements PlugInFilter {
     private boolean recalculateMeanAfterGrow = false;
     private int maxIterations = 1;
 
+    
     private int width = 0;
     private int height = 0;
     private int[][] seedPixels;
