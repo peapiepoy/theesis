@@ -30,7 +30,7 @@
       </plugin>
     </plugins>
   </build>
-  
+
   <repositories>
         <!-- NB: for project parent -->
         <repository>
