@@ -37,6 +37,7 @@ public class Entry {
 	public int[] maskColor = {100, 0, 255, 0, 0};
 	
 	// segmentation RegionGrowing
+	//how do i make local changes
 	
 	Entry(){
 		this.segmenting = new DisplayThreePanel(true);
