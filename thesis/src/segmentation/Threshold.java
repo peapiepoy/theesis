@@ -4,11 +4,11 @@ import java.awt.image.BufferedImage;
 
 import main.Entry;
 
-public class RegionGrowing {
+public class Threshold {
 	public BufferedImage img, grayscaled, segmentedImage;
 	private int width, height;
 	
-	public RegionGrowing(BufferedImage img) {
+	public Threshold(BufferedImage img) {
 		this.img = img;
 		this.width = img.getWidth();
 		this.height = img.getHeight();
